@@ -75,6 +75,8 @@ Hardcore_Settings = {
 	global_custom_pronoun = false,
 }
 
+WARNING = ""
+
 --[[ Character saved variables ]]
 --
 Hardcore_Character = {
@@ -1197,6 +1199,7 @@ function Hardcore:Startup()
 	-- actually start loading the addon once player ui is loading
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_LOGIN")
+	self:RegisterEvent("PLAYER_LOGOUT")
 end
 
 --[[ Events ]]
@@ -1333,7 +1336,10 @@ function Hardcore:PLAYER_LOGIN()
 	if Hardcore_Character.guid ~= PLAYER_GUID then
 		Hardcore:Print("New character detected.  Contact a mod or technician in #addon-appeal if this is unexpected.")
 		Hardcore:ForceResetSavedVariables()
+		WARNING = ""
 	end
+
+	Hardcore_VerifyChecksum()
 
 	local any_acheivement_registered = false
 	for i, v in ipairs(Hardcore_Character.achievements) do
@@ -1437,6 +1443,11 @@ function Hardcore:PLAYER_LOGIN()
 			"Your character has a recorded name change.  Contact a mod or technician in #addon-appeal for approval to continue or disk your HC status."
 		)
 	end
+end
+
+function Hardcore:PLAYER_LOGOUT()
+	-- Calculate the data file checksum
+	Hardcore_StoreChecksum()
 end
 
 local function GiveVidereWarning()
