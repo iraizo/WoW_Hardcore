@@ -2458,7 +2458,7 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 		end
 		if command == COMM_COMMANDS[4] then -- Received hc character data
 			local name, _ = string.split("-", sender)
-			local version_str, creation_time, achievements_str, _, party_mode_str, _, _, team_str, hc_tag, passive_achievements_str =
+			local version_str, creation_time, achievements_str, _, party_mode_str, _, _, team_str, hc_tag, passive_achievements_str, security =
 				string.split(COMM_FIELD_DELIM, data)
 			local achievements_l = { string.split(COMM_SUBFIELD_DELIM, achievements_str) }
 			other_achievements_ds = {}
@@ -2479,6 +2479,9 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 			end
 
 			local team_l = { string.split(COMM_SUBFIELD_DELIM, team_str) }
+			if security == nil then
+				security == "?"
+			end
 			other_hardcore_character_cache[name] = {
 				first_recorded = creation_time,
 				achievements = other_achievements_ds,
@@ -2488,6 +2491,7 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 				team = team_l,
 				last_received = time(),
 				hardcore_player_name = hc_tag,
+				data_file_security = security
 			}
 			hardcore_modern_menu_state.changeset[string.split("-", name)] = 1
 			return
@@ -3532,6 +3536,10 @@ function Hardcore:SendCharacterData(dest)
 		for i, v in ipairs(Hardcore_Character.passive_achievements) do
 			commMessage = commMessage .. _G.pa_id[v] .. COMM_SUBFIELD_DELIM -- Add unknown creation time
 		end
+		
+		-- Add data file security status
+		commMessage = commMessage .. COMM_FIELD_DELIM
+		commMessage = commMessage .. Hardcore_GetSecurityStatus()
 
 		CTL:SendAddonMessage("ALERT", COMM_NAME, commMessage, "WHISPER", dest)
 	end

@@ -268,10 +268,18 @@ function UpdateCharacterHC(
 		character_meta_data_container:AddChild(hc_tag_f)
 	end
 
+	local dfs_msg = "Data file security: "
+	if _hardcore_character.data_file_security == nil then
+		dfs_msg = dfs_msg .. "?"
+	else
+		dfs_msg = dfs_msg .. _hardcore_character.data_file_security
+	end
+	dfs_msg = dfs_msg .. "\n\n\n\n"
+
 	local v_buffer = AceGUI:Create("Label")
 	v_buffer:SetRelativeWidth(1.0)
 	v_buffer:SetHeight(100)
-	v_buffer:SetText("\n\n\n\n\n")
+	v_buffer:SetText(dfs_msg)
 	frame_to_update:AddChild(v_buffer)
 
 	local achievements_container = AceGUI:Create("SimpleGroup")
