@@ -290,7 +290,7 @@ function UpdateCharacterHC(
 	local hc_tag_h = AceGUI:Create("HardcoreClassTitleLabel")
 	hc_tag_h:SetRelativeWidth(1.0)
 	hc_tag_h:SetHeight(60)
-	hc_tag_h:SetText(verif_msg)
+	hc_tag_h:SetText(verif_msg2)
 	hc_tag_h:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
 	character_meta_data_container:AddChild(hc_tag_h)
 
