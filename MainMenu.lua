@@ -694,7 +694,6 @@ local function DrawVerifyTab(container, _hardcore_character)
 		.. "\n [" .. party_mode .. ", " 
 		.. team_1 .. ", " .. team_2 .. "]\n"
 		.. "Played: " .. math.floor(0.5 + _hardcore_character.time_played / 360) / 10 .. " hrs\n\n"
-		.. "Data file security: " .. Hardcore_GetSecurityStatus()
 	)
 
 	character_and_level_label:SetFont("Fonts\\FRIZQT__.TTF", 14, "")

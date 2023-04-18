@@ -97,6 +97,7 @@ end
 local function Hardcore_InsertModificationWarning()
 	if WARNING == nil or WARNING == "" then
 		WARNING = "-- " .. WARNING_MESSAGE .. " --"
+		Hardcore_Character.checksum = 1
 		Hardcore:Print( "Data file security mechanism engaged")
 	end
 end
@@ -104,12 +105,12 @@ end
 -- Returns a string identifying the data file security status
 function Hardcore_GetSecurityStatus()
 	if tampered_status == true then
-		return "FAIL"
+		return "TAMPERED"
 	end
 	if Hardcore_Character.checksum == nil then
 		return "?"
 	elseif Hardcore_Character.checksum == -1 then
-		return "FAIL"
+		return "TAMPERED"
 	else
 		return "OK"
 	end
@@ -140,7 +141,7 @@ function Hardcore_VerifyChecksum()
 		end
 		if tampered == true then
 			Hardcore:Print( "You have tampered with the data file -- your run is now invalid!")
-			Hardcore:Print( "The Hardcore mods have been notified.")
+			Hardcore:Print( "The Hardcore mods will be notified.")
 			-- Make sure the warning is displayed again!
 			WARNING = "-- " .. WARNING_MESSAGE .. " ---"
 			tampered_status = true

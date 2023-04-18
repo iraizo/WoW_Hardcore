@@ -268,18 +268,36 @@ function UpdateCharacterHC(
 		character_meta_data_container:AddChild(hc_tag_f)
 	end
 
-	local dfs_msg = "Data file security: "
-	if _hardcore_character.data_file_security == nil then
-		dfs_msg = dfs_msg .. "?"
+	local verif_msg = "Verification status: "
+	if _hardcore_character.verification_status == nil then
+		verif_msg = verif_msg .. "?"
 	else
-		dfs_msg = dfs_msg .. _hardcore_character.data_file_security
+		verif_msg = verif_msg .. _hardcore_character.verification_status
 	end
-	dfs_msg = dfs_msg .. "\n\n\n\n"
+	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
+	hc_tag_g:SetRelativeWidth(1.0)
+	hc_tag_g:SetHeight(60)
+	hc_tag_g:SetText(verif_msg)
+	hc_tag_g:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	character_meta_data_container:AddChild(hc_tag_g)
+
+	local verif_msg2 = ""
+	if _hardcore_character.verification_details == nil then
+		verif_msg2 = verif_msg2 .. "?"
+	else
+		verif_msg2 = verif_msg2 .. _hardcore_character.verification_details
+	end
+	local hc_tag_h = AceGUI:Create("HardcoreClassTitleLabel")
+	hc_tag_h:SetRelativeWidth(1.0)
+	hc_tag_h:SetHeight(60)
+	hc_tag_h:SetText(verif_msg)
+	hc_tag_h:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	character_meta_data_container:AddChild(hc_tag_h)
 
 	local v_buffer = AceGUI:Create("Label")
 	v_buffer:SetRelativeWidth(1.0)
 	v_buffer:SetHeight(100)
-	v_buffer:SetText(dfs_msg)
+	v_buffer:SetText("\n\n\n")
 	frame_to_update:AddChild(v_buffer)
 
 	local achievements_container = AceGUI:Create("SimpleGroup")
