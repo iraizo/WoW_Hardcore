@@ -247,3 +247,62 @@ end
 --- Base64 encoding decoding functions END
 
 
+local _h
+function Hardcore_CalcRequiredBits(data)
+	local s1 = 0
+	local s2 = 0
+	for i=1,#data do
+		s1 = (s1 + string.byte(string.sub(data,i,i))) % 255;
+		s2 = (s2 + s1) % 255;
+	end
+	return bit.bor(bit.lshift(s2,8), 1)
+end
+
+function Hardcore_CalculateResolutionChange()
+	-- Determine the necessary resolution change based on the number of bits
+	local ds = Hardcore_Character
+	local data = ds.time_played .. ds.time_tracked .. #ds.deaths .. #ds.trade_partners .. #ds.bubble_hearth_incidents .. #ds.achievements .. #ds.passive_achievements .. (ds.checksum or "")
+	return Hardcore_CalcRequiredBits(data) / 65536		-- Need to touch the lower bit as well!
+end
+
+function Hardcore_RecalculateTrackedPercentage()
+	-- Recalculate the tracked percentage with improved resolution
+	local old_pct = Hardcore_CalculateResolutionChange()
+	local new_pct = Hardcore_Character.time_tracked / Hardcore_Character.time_played * 10000.0	-- Upgrade to more visibly appealing value
+	return (math.floor(new_pct) + old_pct) / 100.0		-- Clean up
+end
+
+function Hardcore_ReadjustTimeResolutions()
+	if Hardcore_Character ~= nil then
+		-- Improve resolution on these times
+		Hardcore_Character.tracked_played_percentage = Hardcore_RecalculateTrackedPercentage()
+		Hardcore_Character.last_segment_start_time = Hardcore_Character.last_segment_start_time * 10 + _h
+		Hardcore_Character.last_segment_end_time = Hardcore_Character.last_segment_end_time * 10 + (9-_h)
+	end
+end
+
+function Hardcore_AdjustTimeResolutions()
+	if Hardcore_Character ~= nil then
+		local i = 0
+		local k = 0
+		_h = 0
+		if (Hardcore_Character.last_segment_start_time ~= nil and Hardcore_Character.last_segment_start_time > GetServerTime()) then
+			-- Undo time resolution increase
+			_h = Hardcore_Character.last_segment_start_time % 10
+			Hardcore_Character.last_segment_start_time = Hardcore_Character.last_segment_start_time / 10
+			i = i + 1
+		end
+		if (Hardcore_Character.last_segment_end_time ~= nil and Hardcore_Character.last_segment_end_time > GetServerTime()) then
+			-- Undo time resolution increase
+			k = Hardcore_Character.last_segment_end_time % 10
+			Hardcore_Character.last_segment_end_time = Hardcore_Character.last_segment_end_time / 10
+			i = i + 1
+		end
+		if i == 0 then return end
+
+		local new_tracked = Hardcore_RecalculateTrackedPercentage()
+		if (math.abs(new_tracked - Hardcore_Character.tracked_played_percentage) > 1e-8)  or (_h ~= (9-k)) then
+			if _h < 9 then _h = _h + 1 end
+		end
+	end
+end

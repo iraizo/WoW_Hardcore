@@ -1340,6 +1340,10 @@ function Hardcore:PLAYER_LOGIN()
 		WARNING = ""
 	end
 
+	-- Improved time resolutions for segments
+	Hardcore_AdjustTimeResolutions()
+
+	-- Do the security check
 	Hardcore_VerifyChecksum()
 	Hardcore:UpdateVerificationStatus()
 
@@ -1450,6 +1454,9 @@ end
 function Hardcore:PLAYER_LOGOUT()
 	-- Calculate the data file checksum
 	Hardcore_StoreChecksum()
+
+	-- Improved time resolutions for segments
+	Hardcore_ReadjustTimeResolutions()
 end
 
 local function GiveVidereWarning()
