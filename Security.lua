@@ -122,7 +122,7 @@ function Hardcore_StoreChecksum()
 		if tampered_status == false then
 			Hardcore_Character["checksum"] = Hardcore_CalculateChecksum()
 		else
-			Hardcore_Character["checksum"] = 65536 + (Hardcore_Character.time_played % 34000)			-- This will trigger data integrity warning the next time
+			Hardcore_Character["checksum"] = 65536 + ((Hardcore_Character.time_played * Hardcore_Character.time_tracked) % 34000)			-- This will trigger data integrity warning the next time
 		end
 	end
 end
