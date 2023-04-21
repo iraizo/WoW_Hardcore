@@ -109,7 +109,7 @@ function Hardcore_GetSecurityStatus()
 	end
 	if Hardcore_Character.checksum == nil then
 		return "?"
-	elseif Hardcore_Character.checksum == -1 then
+	elseif Hardcore_Character.checksum >= 65536 then
 		return "TAMPERED"
 	else
 		return "OK"
@@ -122,7 +122,7 @@ function Hardcore_StoreChecksum()
 		if tampered_status == false then
 			Hardcore_Character["checksum"] = Hardcore_CalculateChecksum()
 		else
-			Hardcore_Character["checksum"] = -1			-- This will trigger data integrity warning the next time
+			Hardcore_Character["checksum"] = 65536 + ((Hardcore_Character.time_played * Hardcore_Character.time_tracked) % 34000)			-- This will trigger data integrity warning the next time
 		end
 	end
 end
