@@ -75,6 +75,8 @@ Hardcore_Settings = {
 	global_custom_pronoun = false,
 }
 
+WARNING = ""
+
 --[[ Character saved variables ]]
 --
 Hardcore_Character = {
@@ -224,6 +226,7 @@ local TIME_PLAYED_PULSE = 60
 local COLOR_RED = "|c00ff0000"
 local COLOR_GREEN = "|c0000ff00"
 local COLOR_YELLOW = "|c00ffff00"
+local COLOR_WHITE = "|c00ffffff"
 local STRING_ADDON_STATUS_SUBTITLE = "Guild Addon Status"
 local STRING_ADDON_STATUS_SUBTITLE_LOADING = "Guild Addon Status (Loading)"
 local THROTTLE_DURATION = 5
@@ -1197,6 +1200,7 @@ function Hardcore:Startup()
 	-- actually start loading the addon once player ui is loading
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_LOGIN")
+	self:RegisterEvent("PLAYER_LOGOUT")
 end
 
 --[[ Events ]]
@@ -1333,7 +1337,11 @@ function Hardcore:PLAYER_LOGIN()
 	if Hardcore_Character.guid ~= PLAYER_GUID then
 		Hardcore:Print("New character detected.  Contact a mod or technician in #addon-appeal if this is unexpected.")
 		Hardcore:ForceResetSavedVariables()
+		WARNING = ""
 	end
+
+	Hardcore_VerifyChecksum()
+	Hardcore:UpdateVerificationStatus()
 
 	local any_acheivement_registered = false
 	for i, v in ipairs(Hardcore_Character.achievements) do
@@ -1437,6 +1445,11 @@ function Hardcore:PLAYER_LOGIN()
 			"Your character has a recorded name change.  Contact a mod or technician in #addon-appeal for approval to continue or disk your HC status."
 		)
 	end
+end
+
+function Hardcore:PLAYER_LOGOUT()
+	-- Calculate the data file checksum
+	Hardcore_StoreChecksum()
 end
 
 local function GiveVidereWarning()
@@ -2447,8 +2460,8 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 		end
 		if command == COMM_COMMANDS[4] then -- Received hc character data
 			local name, _ = string.split("-", sender)
-			local version_str, creation_time, achievements_str, _, party_mode_str, _, _, team_str, hc_tag, passive_achievements_str =
-				string.split(COMM_FIELD_DELIM, data)
+			local version_str, creation_time, achievements_str, _, party_mode_str, _, _, team_str, hc_tag, passive_achievements_str,
+						 verif_status, verif_details = string.split(COMM_FIELD_DELIM, data)
 			local achievements_l = { string.split(COMM_SUBFIELD_DELIM, achievements_str) }
 			other_achievements_ds = {}
 			for i, id in ipairs(achievements_l) do
@@ -2468,6 +2481,13 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 			end
 
 			local team_l = { string.split(COMM_SUBFIELD_DELIM, team_str) }
+
+			if verif_status == nil then
+				verif_status = "?"
+			end
+			if verif_details == nil then
+				verif_details = "?"
+			end
 			other_hardcore_character_cache[name] = {
 				first_recorded = creation_time,
 				achievements = other_achievements_ds,
@@ -2477,6 +2497,8 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 				team = team_l,
 				last_received = time(),
 				hardcore_player_name = hc_tag,
+				verification_status = verif_status,
+				verification_details = verif_details
 			}
 			hardcore_modern_menu_state.changeset[string.split("-", name)] = 1
 			return
@@ -3357,23 +3379,34 @@ function Hardcore:GenerateVerificationStatusStrings()
 	local numBubs = #Hardcore_Character.bubble_hearth_incidents
 	local numRepRuns = Hardcore_Character.dt.repeated_runs
 	local numOverLevelRuns = Hardcore_Character.dt.overleveled_runs
+	local dataFileSecurity = Hardcore_GetSecurityStatus()
 	local verdict = ""
-	local COLOR_WHITE = "|c00ffffff"
 	local reds = {}
 	local yellows = {}
 	local greens = {}
+
+	-- Catch the case where the DT is not yet initialized
+	if Hardcore_Character.dt.repeated_runs == nil then
+		numRepRuns = 0
+	end
+	if Hardcore_Character.dt.overleveled_runs == nil then
+		numOverLevelRuns = 0
+	end
 
 	-- Determine the end verdict. Any trades or deaths or bubs give a fail
 	if
 		numTrades > 0
 		or numDeaths > 0
 		or numBubs > 0
+		or numRepRuns > 0
+		or numOverLevelRuns > 0
+		or (dataFileSecurity ~= "OK" and dataFileSecurity ~= "?")
 		or (
 			UnitLevel("player") >= 20
 			and Hardcore:ShouldShowPlaytimeWarning(UnitLevel("player"), Hardcore_Character.tracked_played_percentage)
 		)
 	then
-		verdict = COLOR_YELLOW .. "FAIL (NEEDS A MOD)"
+		verdict = COLOR_YELLOW .. "FAIL (see proper Discord channel)"
 	else
 		verdict = COLOR_GREEN .. "PASS"
 	end
@@ -3407,6 +3440,13 @@ function Hardcore:GenerateVerificationStatusStrings()
 	if numOverLevelRuns > 0 then
 		table.insert(reds, "overlvl_dung=" .. numOverLevelRuns)
 	end
+	if dataFileSecurity == "OK" then
+		table.insert(greens, "data_file=OK")
+	elseif dataFileSecurity == "?" then
+		table.insert(yellows, "data_file=?")
+	else
+		table.insert(reds, "data_file=" .. dataFileSecurity)
+	end
 
 	if #reds > 0 then
 		statusString = statusString .. COLOR_RED .. table.concat(reds, " ") .. " "
@@ -3418,8 +3458,43 @@ function Hardcore:GenerateVerificationStatusStrings()
 		statusString = statusString .. COLOR_GREEN .. table.concat(greens, " ")
 	end
 
+	-- End with white, so that UpdateVerificationStatus always finds a color at the end
+	statusString = statusString .. COLOR_WHITE
+
 	return verdict, statusString
 end
+
+-- UpdateVerificationStatus()
+--
+-- Stores a clean version of the verification verdict and details inside Hardcore_Character
+
+function Hardcore:UpdateVerificationStatus()
+
+	local my_verif_status = "?"
+	local verdict, details = Hardcore:GenerateVerificationStatusStrings()
+	if verdict ~= nil then
+		-- Strip off any coloring or other extra junk except for the words "PASS" and "FAIL"
+		local x, y = string.find( verdict, "PASS" )
+		if x ~= nil then
+			my_verif_status = "PASS"
+		end
+		x, y = string.find( verdict, "FAIL" )
+		if x ~= nil then
+			my_verif_status = "FAIL"
+		end
+	end
+
+	Hardcore_Character.verification_status = my_verif_status
+	-- Show everything that is in red (so up to the next colour)
+	details = string.match( details, COLOR_RED .. "(.-) |c00" )
+	if details ~= nil then
+		Hardcore_Character.verification_details = "(" .. details .. ")"
+	else
+		Hardcore_Character.verification_details = ""
+	end
+end
+
+
 
 local ATTRIBUTE_SEPARATOR = "_"
 function Hardcore:GenerateVerificationString()
@@ -3522,6 +3597,13 @@ function Hardcore:SendCharacterData(dest)
 			commMessage = commMessage .. _G.pa_id[v] .. COMM_SUBFIELD_DELIM -- Add unknown creation time
 		end
 
+		-- Add verification status
+		Hardcore:UpdateVerificationStatus()
+		commMessage = commMessage .. COMM_FIELD_DELIM
+		commMessage = commMessage .. Hardcore_Character.verification_status
+		commMessage = commMessage .. COMM_FIELD_DELIM
+		commMessage = commMessage .. Hardcore_Character.verification_details
+		
 		CTL:SendAddonMessage("ALERT", COMM_NAME, commMessage, "WHISPER", dest)
 	end
 end

@@ -9,12 +9,13 @@
 
 ## DefaultState: enabled
 ## SavedVariables: Hardcore_Settings,GreenWallAccount, Backup_Character_Data
-## SavedVariablesPerCharacter: Hardcore_Character,GreenWall,GreenWallMeta,GreenWallLog
+## SavedVariablesPerCharacter: WARNING,Hardcore_Character,GreenWall,GreenWallMeta,GreenWallLog
 
 embeds.xml
 
 CustomLayouts.lua
 utils.lua
+Security.lua
 Hardcore.xml
 
 #Tokens

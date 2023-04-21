@@ -756,31 +756,6 @@ local function DungeonTrackerAddToParty( run, name )
 
 end
 
-
--- DungeonTrackerGetCleanVerificationStatus()
---
--- Gives a cleaned-up version of the colorized status string
-
-local function DungeonTrackerGetCleanVerificationStatus()
-
-	local my_verif_status = "?"
-	local verdict, _ = Hardcore:GenerateVerificationStatusStrings()
-	if verdict ~= nil then
-		-- Strip off any coloring or other extra junk except for the words "PASS" and "FAIL"
-		local x, y = string.find( verdict, "PASS" )
-		if x ~= nil then
-			my_verif_status = "PASS"
-		end
-		x, y = string.find( verdict, "FAIL" )
-		if x ~= nil then
-			my_verif_status = "FAIL"
-		end		
-	end
-
-	return my_verif_status
-end
-
-
 -- DungeonTrackerReceivePulse( data, sender )
 --
 -- Receives a group pulse, storing the time in the message and the sender in the associated pending run
@@ -877,7 +852,7 @@ local function DungeonTrackerSendPulse(now)
 	Hardcore_Character.dt.sent_pulse = now
 
 	-- Generate PASS/FAIL information
-	my_verif_status = DungeonTrackerGetCleanVerificationStatus()
+	my_verif_status = Hardcore:GetCleanVerificationStatus()
 
 	-- Send my own info to the party (=name + server time + dungeon)
 	if CTL then
@@ -1272,7 +1247,7 @@ local function DungeonTrackerCheckVersions()
 			local message = "Addon version / verification status check: "
 			for i,v in ipairs( party ) do
 				if v == UnitName("player") then
-					local my_status = DungeonTrackerGetCleanVerificationStatus()
+					local my_status = Hardcore:GetCleanVerificationStatus()
 					message = message .. v .. ":" .. GetAddOnMetadata("Hardcore", "Version") .. " [" .. my_status .. "]"
 				else
 					message = message .. v .. ":"
@@ -1620,6 +1595,7 @@ local function DungeonTracker()
 			DungeonTrackerClearShortNoKillRuns()
 			DungeonTrackerFindMissingRunsFromQuests()
 			DungeonTrackerFindMergeableRuns()
+			DungeonTrackerUpdateInfractions()
 		end)
 	end
 
