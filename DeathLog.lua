@@ -18,6 +18,7 @@ local death_alerts_channel_pw = "hcdeathalertschannelpw"
 local throttle_player = {}
 local shadowbanned = {}
 
+
 local death_log_icon_frame = CreateFrame("frame")
 death_log_icon_frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 death_log_icon_frame:SetSize(40,40)
@@ -155,16 +156,15 @@ end
 local death_log_cache = {}
 
 local death_log_frame = AceGUI:Create("Deathlog")
-
 death_log_frame.frame:SetMovable(false)
 death_log_frame.frame:EnableMouse(false)
 death_log_frame:SetTitle("Hardcore Death Log")
 local subtitle_data = {
   {"Name", 70, function(_entry) return _entry.player_data["name"] or "" end},
   {"Class", 60, function(_entry)
-    local class_str, _, _ = GetClassInfo(_entry.player_data["class_id"])
-    if RAID_CLASS_COLORS[class_str:upper()] then
-	return "|c" .. RAID_CLASS_COLORS[class_str:upper()].colorStr .. class_str .. "|r"
+    local class_str, class_file, _ = GetClassInfo(_entry.player_data["class_id"])
+    if RAID_CLASS_COLORS[class_file] then
+	return "|c" .. RAID_CLASS_COLORS[class_file].colorStr .. class_str .. "|r"
     end
     return class_str or ""
   end},
@@ -386,9 +386,9 @@ end
 local function alertIfValid(_player_data)
   local race_info = C_CreatureInfo.GetRaceInfo(_player_data["race_id"])
   local race_str = race_info.raceName
-  local class_str, _, _ = GetClassInfo(_player_data["class_id"])
-  if class_str and RAID_CLASS_COLORS[class_str:upper()] then
-      class_str = "|c" .. RAID_CLASS_COLORS[class_str:upper()].colorStr .. class_str .. "|r"
+  local class_str, class_file, _ = GetClassInfo(_player_data["class_id"])
+  if class_str and RAID_CLASS_COLORS[class_file] then
+      class_str = "|c" .. RAID_CLASS_COLORS[class_file].colorStr .. class_str .. "|r"
   end
 
   local level_str = tostring(_player_data["level"])
