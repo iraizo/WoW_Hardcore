@@ -2490,11 +2490,12 @@ function Hardcore:CHAT_MSG_ADDON(prefix, datastr, scope, sender)
 			local team_l = { string.split(COMM_SUBFIELD_DELIM, team_str) }
 
 			if verif_status == nil then
-				verif_status = "?"
+				verif_status = "(unknown - version not supported)"
 			end
 			if verif_details == nil then
-				verif_details = "?"
+				verif_details = "(unknown - version not supported)"
 			end
+
 			other_hardcore_character_cache[name] = {
 				first_recorded = creation_time,
 				achievements = other_achievements_ds,

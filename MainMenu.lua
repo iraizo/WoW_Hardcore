@@ -263,7 +263,7 @@ end
 local function CreateHeadingLabel (title, frame)
 	local label = AceGUI:Create("Label")
 	label:SetWidth(500)
-	label:SetText(title)
+	label:SetText("\n" .. title)
 	label:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
 	frame:AddChild(label)
 	
@@ -310,6 +310,9 @@ local function DrawGeneralTab(container)
 	changelog_title:SetFont("Interface\\Addons\\Hardcore\\Media\\BreatheFire.ttf", 20, "")
 	scroll_frame:AddChild(changelog_title)
 
+	CreateHeadingLabel("11.30", scroll_frame)
+	CreateDescriptionLabel("- Dungeon tracker improvements\n- Inspect tab improvements\n- File handling upgrades", scroll_frame)
+	
 	CreateHeadingLabel("11.22", scroll_frame)
 	CreateDescriptionLabel("- Added elemental balance achievement for mage. Complete the Hardcore challenge without at any point casting two elemental damage spells of the same element (fire or ice) in a row. Arcane spells that deal damage are not allowed to be cast.\n- Added Shadow and Flame achievement for warlock. Complete the Hardcore challenge without at any point casting two shadow or two flame spells in a row during combat.\n- Fixes for death log when greenwall only is enabled and for grief protection.\n- Improvements for dungeon tracker and new warning for entering dungeon when you shouldn't.\n- Added Death Statistics Page, which shows your statistics of deaths that you have witnessed via the death log.", scroll_frame)
 
@@ -320,7 +323,7 @@ local function DrawGeneralTab(container)
 	CreateDescriptionLabel("- Add class colors to faction-wide death alerts\n- Added minimize function to death log\n- Fix bug where death marker stays on map after viewing death location from death log\n- Updated messages regarding dataloss and mod pinging\n- Dungeon tracker; re-introduced dungeon kills per mod id\n- Added diagnostic information to verify tab\n- Record death log entries for statistics (capped at 100 for now)\n- Bug fixes related to travelling between continents with death log frame\n- Block failing starting achievements when max level", scroll_frame)
 
 	CreateHeadingLabel("11.19", scroll_frame)
-	CreateDescriptionLabel("- Fixed minimum level alerts for faction-wide death alerts\n - Fixed issue where death alerts channel always takes the first channel spot\n - Fixed conflict with other addons where system messages wouldn't show up\n - Players can now see death locations by right clicking on death log entry and choosing the see death location item\n - Level filtering in LFG GW mode fixed", scroll_frame)
+	CreateDescriptionLabel("- Fixed minimum level alerts for faction-wide death alerts\n- Fixed issue where death alerts channel always takes the first channel spot\n- Fixed conflict with other addons where system messages wouldn't show up\n- Players can now see death locations by right clicking on death log entry and choosing the see death location item\n- Level filtering in LFG GW mode fixed", scroll_frame)
 	
 	CreateHeadingLabel("11.18", scroll_frame)
 	CreateDescriptionLabel("- Enabled greenwall! Greenwall is back with limited support.  Death alerts, last words, and level up announcements shared via\n greenwall have been disabled. Death alerts and last words will be configurable via the death log.  Level up announcements will \nuse a similar interface.  \n- Death log added.  Death log keeps track of deaths that occur faction wide.  You can now enable death alerts faction wide (see\n interface options). Via the interface options you can also disable the death log frame.  You can open up interface options by \nright clicking the logo on the death log. \n- Dungeon tracker improvements", scroll_frame)

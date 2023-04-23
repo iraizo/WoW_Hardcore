@@ -168,6 +168,35 @@ hooksecurefunc(CharacterFrame, "Hide", function(self, button)
 	TabGUI:Hide()
 end)
 
+function extractDetails(str, ignoreKeys)
+	str = str:gsub("^%s*%((.+)%)%s*$", "%1")
+	local details_table = {}
+	for key, value in str:gmatch("(%S+)=(%S+)") do
+	  -- Check if the current key is in the ignoreKeys array
+		local ignore = false
+		for _, ignoreKey in ipairs(ignoreKeys or {}) do
+			if key == ignoreKey then
+				ignore = true
+				break
+			end
+		end
+		-- Store the key-value pair in the details table if it's not being ignored
+		if not ignore then
+		details_table[key] = value
+		end
+	end
+  
+	return details_table
+end
+
+function formatDetails(details_table)
+	local str = ""
+	for key, value in pairs(details_table) do
+	  str = str .. key .. " = " .. value .. ", "
+	end
+	return str:sub(1, -3) -- Remove the trailing space before returning
+  end
+
 function UpdateCharacterHC(
 	_hardcore_character,
 	_player_name,
@@ -238,11 +267,11 @@ function UpdateCharacterHC(
 	local creation_date_label = AceGUI:Create("HardcoreClassTitleLabel")
 	creation_date_label:SetRelativeWidth(1.0)
 	creation_date_label:SetHeight(60)
-	local start_date = "?"
+	local start_date = "(unknown - data loss / previous version)"
 	if _hardcore_character.first_recorded ~= nil and _hardcore_character.first_recorded ~= -1 then
 		start_date = date("%m/%d/%y", _hardcore_character.first_recorded)
 		if start_date == nil then
-			start_date = "?"
+			start_date = "(unknown - data loss / previous version)"
 		end
 	end
 	creation_date_label:SetText("Started on " .. start_date)
@@ -258,6 +287,26 @@ function UpdateCharacterHC(
 	version_name:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
 	character_meta_data_container:AddChild(version_name)
 
+	-- SET UP FILTERING
+	local filtered_status = _hardcore_character.verification_status
+	local filtered_details = _hardcore_character.verification_details
+
+	if _player_name ~= UnitName("player") then
+		-- Remove tracked_time and deaths entries
+		local ignoreKeys = {"tracked_time", "deaths", "repeat_dung", "overlvl_dung"}
+		local details_table = extractDetails(_hardcore_character.verification_details, ignoreKeys)
+		filtered_details = formatDetails(details_table)
+
+		-- filtered details now only contains offenses that aren't tracked time or deaths, or is empty
+		if filtered_details == "" and _hardcore_character.verification_status == "PASS" then
+			filtered_status = "|cff1eff0cPASS|r"
+		elseif filtered_details == "" and _hardcore_character.verification_status == "FAIL" then
+			filtered_status = "|cffff8000PENDING|r"
+		else
+			filtered_status = "|cffff3f40FAIL|r"
+		end
+	end
+
 	if _hardcore_character.hardcore_player_name ~= nil and _hardcore_character.hardcore_player_name ~= "" then
 		local hc_tag_f = AceGUI:Create("HardcoreClassTitleLabel")
 		hc_tag_f:SetRelativeWidth(1.0)
@@ -268,12 +317,13 @@ function UpdateCharacterHC(
 		character_meta_data_container:AddChild(hc_tag_f)
 	end
 
-	local verif_msg = "Verification status: "
+	local verif_msg = "\n\nVerification status: \n\n"
 	if _hardcore_character.verification_status == nil then
-		verif_msg = verif_msg .. "?"
+		verif_msg = verif_msg .. "(unknown - version not supported)" .. "\n\n"
 	else
-		verif_msg = verif_msg .. _hardcore_character.verification_status
+		verif_msg = verif_msg .. filtered_status .. "\n\n"
 	end
+
 	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
 	hc_tag_g:SetRelativeWidth(1.0)
 	hc_tag_g:SetHeight(60)
@@ -283,16 +333,30 @@ function UpdateCharacterHC(
 
 	local verif_msg2 = ""
 	if _hardcore_character.verification_details == nil then
-		verif_msg2 = verif_msg2 .. "?"
+		verif_msg2 = verif_msg2 .. "(unknown - version not supported)"
 	else
-		verif_msg2 = verif_msg2 .. _hardcore_character.verification_details
+		verif_msg2 = verif_msg2 .. filtered_details
 	end
+
 	local hc_tag_h = AceGUI:Create("HardcoreClassTitleLabel")
 	hc_tag_h:SetRelativeWidth(1.0)
 	hc_tag_h:SetHeight(60)
 	hc_tag_h:SetText(verif_msg2)
 	hc_tag_h:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
 	character_meta_data_container:AddChild(hc_tag_h)
+	
+	local explanatory_key_msg = ""
+	.. "\n\nWhat does this mean?\n\n"
+	.. "|cff1eff0cPASS|r - Valid HC Character, Dungeon-legal\n\n"
+	.. "|cffff8000PENDING|r - Death or data appeal in progress\n\n"
+	.. "|cffff3f40FAIL|r - Has failed the challenge - DO NOT GROUP WITH\n\n"
+	
+	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
+	hc_tag_g:SetRelativeWidth(1.0)
+	hc_tag_g:SetHeight(60)
+	hc_tag_g:SetText(explanatory_key_msg)
+	hc_tag_g:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	character_meta_data_container:AddChild(hc_tag_g)
 
 	local v_buffer = AceGUI:Create("Label")
 	v_buffer:SetRelativeWidth(1.0)
