@@ -3503,6 +3503,29 @@ function Hardcore:UpdateVerificationStatus()
 end
 
 
+-- GetCleanVerificationStatus()
+--
+-- Gives a cleaned-up version of the colorized status string
+
+function Hardcore:GetCleanVerificationStatus()
+
+	local my_verif_status = "?"
+	local verdict, _ = Hardcore:GenerateVerificationStatusStrings()
+	if verdict ~= nil then
+		-- Strip off any coloring or other extra junk except for the words "PASS" and "FAIL"
+		local x, y = string.find( verdict, "PASS" )
+		if x ~= nil then
+			my_verif_status = "PASS"
+		end
+		x, y = string.find( verdict, "FAIL" )
+		if x ~= nil then
+			my_verif_status = "FAIL"
+		end
+	end
+
+	return my_verif_status
+end
+
 
 local ATTRIBUTE_SEPARATOR = "_"
 function Hardcore:GenerateVerificationString()
