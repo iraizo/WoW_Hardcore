@@ -69,6 +69,7 @@ Hardcore_Character = {
 	accumulated_time_diff = 0, -- seconds
 	tracked_played_percentage = 0,
 	deaths = {},
+	appeals = {},
 	bubble_hearth_incidents = {},
 	dt = {},
 	played_time_gap_warnings = {},

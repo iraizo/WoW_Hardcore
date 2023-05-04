@@ -22,7 +22,7 @@ local function extract_arguments(args)
 	return first, second
 end
 
-local function djb2(str)
+local function short_crypto_hash(str)
 	local hash = 5381
 	for i = 1, #str do
 		hash = hash * 33 + str:byte( i )
@@ -30,9 +30,34 @@ local function djb2(str)
 	return hash
 end
 
-local function GetCode(ach_num)
-	local str = UnitName("player"):sub(1,5) .. UnitLevel("player") .. ach_num
-	return djb2(str)
+local function get_short_code(suffix)
+	local str = UnitName("player"):sub(1,5) .. UnitLevel("player") .. suffix
+	return short_crypto_hash(str)
+end
+
+
+local function long_cryto_hash( str )
+
+	local a = 0
+	local b = 0
+	local dictionary = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 /:"
+	
+	for i = 1, #str do
+		x, y = string.find( dictionary, str:sub(i,i), 1, true )
+		if x == nil then
+			x = #dictionary
+		end
+		for i=1, 17 do
+			a = (a * (-6) + b + 0x74FA - x) % 4096
+			b = (math.floor(b / 3) + a + 0x81BE - x) % 4096
+		end
+	end
+	return (a * 4096) + b
+end
+
+local function get_long_code( date_str )
+	local str = UnitName("player") .. UnitLevel("player") .. date_str
+	return long_cryto_hash(str)
 end
 
 local function SlashCmd_Deprecated()	
@@ -49,7 +74,7 @@ local function SlashCmd_AppealAchievementCode(args)
 		return
 	end
 
-	if tostring(GetCode(ach_num)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
+	if tostring(short_crypto_hash(ach_num)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
 		for i,v in ipairs(Hardcore_Character.achievements) do
 			if v == _G.id_a[ach_num] then
 				return
@@ -90,7 +115,7 @@ local function SlashCmd_AppealAchievementCode(args)
 		local dialog = StaticPopup_Show("ConfirmAchievementAppeal")
 
 	else
-		Hardcore:Print("Incorrect code. Double check with a moderator." .. GetCode(ach_num) .. " " .. code)
+		Hardcore:Print("Incorrect code. Double check with a moderator." .. short_crypto_hash(ach_num) .. " " .. code)
 	end
 end
 
@@ -118,7 +143,7 @@ local function SlashCmd_AppealPassiveAchievementCode(args)
 		return
 	end
 
-	if tostring(GetCode(ach_num)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
+	if tostring(short_crypto_hash(ach_num)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
 		for i,v in ipairs(Hardcore_Character.passive_achievements) do
 			if v == _G.id_pa[ach_num] then
 				return
@@ -127,7 +152,7 @@ local function SlashCmd_AppealPassiveAchievementCode(args)
 		table.insert(Hardcore_Character.passive_achievements, _G.passive_achievements[_G.id_pa[ach_num]].name)
 		Hardcore:Print("Appealed " .. _G.passive_achievements[_G.id_pa[ach_num]].name .. " challenge!")
 	else
-		Hardcore:Print("Incorrect code. Double check with a moderator." .. GetCode(ach_num) .. " " .. code)
+		Hardcore:Print("Incorrect code. Double check with a moderator." .. short_crypto_hash(ach_num) .. " " .. code)
 	end
 end
 
@@ -152,11 +177,11 @@ local function SlashCmd_AppealTradePartners(args)
 		return
 	end
 
-	if tostring(GetCode(-1)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
+	if tostring(short_crypto_hash(-1)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
 		Hardcore_Character.trade_partners = {}
 		Hardcore:Print("Appealed Trade partners")
 	else
-		Hardcore:Print("Incorrect code. Double check with a moderator." .. GetCode(-1) .. " " .. code)
+		Hardcore:Print("Incorrect code. Double check with a moderator." .. short_crypto_hash(-1) .. " " .. code)
 	end
 end
 
@@ -181,7 +206,7 @@ local function SlashCmd_AppealDuoTrio(args)
 		return
 	end
 
-	if tostring(GetCode(-1)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
+	if tostring(short_crypto_hash(-1)):sub(1,10) == tostring(tonumber(code)):sub(1,10) then
 	  if Hardcore_Character.party_mode == "Failed Duo" then
 		  Hardcore_Character.party_mode = "Duo"
 		  Hardcore:Print("Appealed Duo status")
@@ -191,7 +216,76 @@ local function SlashCmd_AppealDuoTrio(args)
 		  Hardcore:Print("Appealed Trio status")
 	  end
 	else
-	  Hardcore:Print("Incorrect code. Double check with a moderator." .. GetCode(-1) .. " " .. code)
+	  Hardcore:Print("Incorrect code. Double check with a moderator." .. short_crypto_hash(-1) .. " " .. code)
+	end
+end
+
+
+
+-- DungeonTrackerHandleAppealCode( args )
+--
+-- Called from Hardcore.lua when user types /hc AppealDungeonCode
+
+local function SlashCmd_AppealDeath( args )
+
+	local usage = "Usage: /hc AppealDeath <code> \"date\""
+	local code = nil
+	local quoted_args = {}
+
+	-- Check and retrieve code and command
+	for substring in args:gmatch("%S+") do
+		if code == nil then
+			code = substring
+		end
+	end
+	if code == nil then
+		Hardcore:Print("Wrong syntax: Missing <code> argument")
+		Hardcore:Print(usage)
+		return
+	end
+	
+	-- Retrieve arguments in quotes, chuck away the code and command and space between
+	for arg in args:gmatch('[^\"]+') do
+		table.insert( quoted_args, arg )
+	end
+	table.remove( quoted_args, 1 )		-- Remove the code and command
+	table.remove( quoted_args, 2 )		-- Remove the empty space		
+
+	if #quoted_args < 1 then
+		Hardcore:Print("Wrong syntax: supply date string in quotes" )
+		Hardcore:Print(usage)
+		return
+	else
+		-- Look for the run with that dungeon and date
+		local death_found = false
+		local index = 0
+		for i,v in ipairs( Hardcore_Character.deaths ) do
+			if Hardcore_Character.deaths[ i ].player_dead_trigger == quoted_args[1] then
+				death_found = true
+				index = i
+			end					
+		end
+		
+		-- If we find multiple matches, we don't do anything
+		if death_found == true then
+		
+			-- Check if the hash code is correct
+			local appeal_code = get_long_code( Hardcore_Character.deaths[ index ].player_dead_trigger )
+			
+			if tonumber( code ) ~= tonumber( appeal_code ) then
+				Hardcore:Print("Incorrect code. Double check with a moderator." )
+				return
+			end								
+			
+			-- Appeal the death
+			Hardcore:Print("Appealed death on " .. Hardcore_Character.deaths[ index ].player_dead_trigger)
+			table.insert( Hardcore_Character.appeals, {["death"] = Hardcore_Character.deaths[ index ].player_dead_trigger} )
+			-- DungeonTrackerUpdateInfractions()
+			return
+		else
+			Hardcore:Print( "Death on " .. Hardcore_Character.deaths[ index ].player_dead_trigger .. " not found!" )
+			return
+		end
 	end
 end
 
