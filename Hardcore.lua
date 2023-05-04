@@ -424,23 +424,6 @@ end
 
 local success_function_executor = { Succeed = SuccessFunction }
 
-
---[[ Command line handler ]]
---
-
-local function djb2(str)
-  local hash = 5381
-  for i = 1, #str do
-    hash = hash * 33 + str:byte( i )
-  end
-  return hash
-end
-
-local function GetCode(ach_num)
-  local str = UnitName("player"):sub(1,5) .. UnitLevel("player") .. ach_num
-  return djb2(str)
-end
-
 local saved_variable_meta = {
 	{ key = "guid", initial_data = UnitGUID("player") },
 	{ key = "time_tracked", initial_data = 0 },
