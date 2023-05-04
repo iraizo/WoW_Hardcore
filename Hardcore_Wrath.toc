@@ -156,6 +156,7 @@ MainMenu.lua
 TextureUtils.lua
 TextureInfo.lua
 AchievementAlertFrame.lua
+SlashCommands.lua
 Hardcore.lua
 
 Libs/GreenWall/Constants.lua
