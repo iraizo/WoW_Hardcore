@@ -271,6 +271,7 @@ local function SlashCmd_AppealDeath( args )
 		
 			-- Check if the hash code is correct
 			local appeal_code = get_long_code( Hardcore_Character.deaths[ index ].player_dead_trigger )
+			Hardcore:Print("Appeal code: " .. appeal_code)
 			
 			if tonumber( code ) ~= tonumber( appeal_code ) then
 				Hardcore:Print("Incorrect code. Double check with a moderator." )
@@ -279,11 +280,14 @@ local function SlashCmd_AppealDeath( args )
 			
 			-- Appeal the death
 			Hardcore:Print("Appealed death on " .. Hardcore_Character.deaths[ index ].player_dead_trigger)
+			if not Hardcore_Character.appeals then
+				Hardcore_Character.appeals = {}
+			end
 			table.insert( Hardcore_Character.appeals, {["death"] = Hardcore_Character.deaths[ index ].player_dead_trigger} )
 			-- DungeonTrackerUpdateInfractions()
 			return
 		else
-			Hardcore:Print( "Death on " .. Hardcore_Character.deaths[ index ].player_dead_trigger .. " not found!" )
+			Hardcore:Print( "Death on " .. quoted_args[1] .. " not found!" )
 			return
 		end
 	end
@@ -430,6 +434,9 @@ local function SlashHandler(msg, editbox)
 
 	elseif cmd == "AppealDuoTrio" then
 		SlashCmd_AppealDuoTrio(args)
+	
+	elseif cmd == "AppealDeath" then
+		SlashCmd_AppealDeath(args)
 
 	else
 		-- If not handled above, display some sort of help message
