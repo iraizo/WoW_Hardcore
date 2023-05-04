@@ -260,6 +260,22 @@ local function spairs(t, order)
 		end
 	end
 end
+local function CreateHeadingLabel (title, frame)
+	local label = AceGUI:Create("Label")
+	label:SetWidth(500)
+	label:SetText("\n" .. title)
+	label:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
+	frame:AddChild(label)
+	
+end
+local function CreateDescriptionLabel (text, frame)
+	local label = AceGUI:Create("Label")
+	label:SetWidth(900)
+	label:SetText(text) 
+	label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	frame:AddChild(label)
+end
+
 
 local function DrawGeneralTab(container)
 	local scroll_container = AceGUI:Create("SimpleGroup")
@@ -294,354 +310,170 @@ local function DrawGeneralTab(container)
 	changelog_title:SetFont("Interface\\Addons\\Hardcore\\Media\\BreatheFire.ttf", 20, "")
 	scroll_frame:AddChild(changelog_title)
 
+	CreateHeadingLabel("11.30", scroll_frame)
+	CreateDescriptionLabel("- Dungeon tracker improvements\n- Inspect tab improvements\n- File handling upgrades", scroll_frame)
+	
+	CreateHeadingLabel("11.22", scroll_frame)
+	CreateDescriptionLabel("- Added elemental balance achievement for mage. Complete the Hardcore challenge without at any point casting two elemental damage spells of the same element (fire or ice) in a row. Arcane spells that deal damage are not allowed to be cast.\n- Added Shadow and Flame achievement for warlock. Complete the Hardcore challenge without at any point casting two shadow or two flame spells in a row during combat.\n- Fixes for death log when greenwall only is enabled and for grief protection.\n- Improvements for dungeon tracker and new warning for entering dungeon when you shouldn't.\n- Added Death Statistics Page, which shows your statistics of deaths that you have witnessed via the death log.", scroll_frame)
+
+	CreateHeadingLabel("11.21", scroll_frame)
+	CreateDescriptionLabel("- Faction-wide death alerts now require the sender to be in a guild\n- Update to dungeon tracking\n- Make death alerts sending more robust; about half of all deaths were previously broadcasted\n- Added option to reset death log position in interface options\n- Fix bug where death log icon wouldn't get hidden when it was specified in interface options", scroll_frame)
+
+	CreateHeadingLabel("11.20", scroll_frame)
+	CreateDescriptionLabel("- Add class colors to faction-wide death alerts\n- Added minimize function to death log\n- Fix bug where death marker stays on map after viewing death location from death log\n- Updated messages regarding dataloss and mod pinging\n- Dungeon tracker; re-introduced dungeon kills per mod id\n- Added diagnostic information to verify tab\n- Record death log entries for statistics (capped at 100 for now)\n- Bug fixes related to travelling between continents with death log frame\n- Block failing starting achievements when max level", scroll_frame)
+
+	CreateHeadingLabel("11.19", scroll_frame)
+	CreateDescriptionLabel("- Fixed minimum level alerts for faction-wide death alerts\n- Fixed issue where death alerts channel always takes the first channel spot\n- Fixed conflict with other addons where system messages wouldn't show up\n- Players can now see death locations by right clicking on death log entry and choosing the see death location item\n- Level filtering in LFG GW mode fixed", scroll_frame)
+	
+	CreateHeadingLabel("11.18", scroll_frame)
+	CreateDescriptionLabel("- Enabled greenwall! Greenwall is back with limited support.  Death alerts, last words, and level up announcements shared via\n greenwall have been disabled. Death alerts and last words will be configurable via the death log.  Level up announcements will \nuse a similar interface.  \n- Death log added.  Death log keeps track of deaths that occur faction wide.  You can now enable death alerts faction wide (see\n interface options). Via the interface options you can also disable the death log frame.  You can open up interface options by \nright clicking the logo on the death log. \n- Dungeon tracker improvements", scroll_frame)
+
+	CreateHeadingLabel("11.16", scroll_frame)
+	CreateDescriptionLabel("- Disable greenwall\n", scroll_frame)
+
+
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.12")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.15", scroll_frame)
+	CreateDescriptionLabel(
+		"- Dungeon tracker improvements\n"
+			.. "- HC Defense fix; resurrecting no longer causes alert\n"
+			.. "- LF mode fixes; no longer crashes for lower version players.\n"
+			.. "- Disable automatic recovery methods\n"
+			.. "- Removed summon mounts from failing Imp Master\n"
+	, scroll_frame)
+	
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Improved anti-grief security\n" ..
-		"- Updated Hardcore Contract\n" ..
-		"- Dungeon Tracker localization\n" ..
-		"- Fixed 'out of date' problem\n" ..
-		"- Improved in-guild muting\n" ..
-		"- Option to block death messages from levels/guilds\n" ..
-		"- Fix Thunderstruck achievement\n" ..
-		"- Fix Against Lord Shalzaru achievement\n"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
+	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.10")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.14", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
+		"- Fix minor crash on quest turn in\n"
+	, scroll_frame)
+	
+	---
+
+	CreateHeadingLabel("11.13", scroll_frame)
+
+	CreateDescriptionLabel(
+		"- Fix guild chat crash in WotLK\n"
+			.. "- Ammend Griefer list\n"
+			.. "- LF mode in greenwall\n"
+			.. "- Added officer tools\n"
+			.. "- No longer generate verification strings under max level\n"
+			.. "- Added HC announcements\n"
+			.. "- Added reminder to fill in HC tag\n"
+			.. "- Added remove achievement command\n"
+			.. "- Automatic DC recovery\n"
+			.. "- Automatic server/name change recovery\n"
+			.. "- Fixed Kill the Betrayer achievement\n"
+			.. "- Fixed achievements from not showing up in accountability tab\n"
+	, scroll_frame)
+	
+
+
+	---
+
+	CreateHeadingLabel("11.12", scroll_frame)
+
+	CreateDescriptionLabel(
+		"- Improved anti-grief security\n"
+			.. "- Updated Hardcore Contract\n"
+			.. "- Dungeon Tracker localization\n"
+			.. "- Fixed 'out of date' problem\n"
+			.. "- Improved in-guild muting\n"
+			.. "- Option to block death messages from levels/guilds\n"
+			.. "- Fix Thunderstruck achievement\n"
+			.. "- Fix Against Lord Shalzaru achievement\n"
+	, scroll_frame)
+	
+
+	CreateHeadingLabel("11.10", scroll_frame)
+
+	CreateDescriptionLabel(
 		"- Various wording changes\n- Added more quests to pvp flag warning\n- Added banned guilds in greenwall\n- Fix to <MOD>\n- Felfire skull fix\n- Dungeon tracker improvements"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
+	, scroll_frame)
+	
 
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.9")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.9", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Added `Hardcore contract` to intro splash"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
+	CreateDescriptionLabel("- Added `Hardcore contract` to intro splash", scroll_frame)
+	
 
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.8")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.8", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Small trio fix where countdown would immediately fail\n- Fixed minor crash for achievements\n- Fixed earthen arise, Goggeroc kills not registering\n- Player pronouns added\n- auto appeal griefing for under 40 characters.\n- Fixed bug where 60 characters can get achievements intended for non-60s"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.7")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.7", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Fixed Deep in the Ban'ethil Barrow Den from missing Rageclaw kill\n- Fixed kill target for Death to Goggeroc\n- Made profession achievements more reliable and check on reload\n- Fixed minor crash on forced achievement selection\n- Removed checks for duo/trios when 60+"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.6")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.6", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Better WoTLK patch compatibility (Overhauled AceGUI)"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	CreateDescriptionLabel("- Better WoTLK patch compatibility (Overhauled AceGUI)", scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.5")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.5", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"-WoTLK patch compatibility"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	CreateDescriptionLabel("-WoTLK patch compatibility", scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.4")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.4", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Fixed stinkys escape for Alliance\n- Fixed the crown of will showing for horde\n- Fixed Kromgrul from not showing up in achievement list\n- Added new achievement `Serum to the Forsaken`."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.3")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.3", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Fixed burning shadow specific bug\n- Tuned achievement animation\n- Dungeon tracking fixes"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.2")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.2", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Made a variety of new achievements more robust\n- duo/trio will no longer fail at lvl 1\n- <MOD> tag no longer applied to say\n- Added legacy support for duo/trio trades"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
+	, scroll_frame)
+	
 
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.1")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
+	CreateHeadingLabel("11.1", scroll_frame)
 
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateDescriptionLabel(
 		"- Fixed bug with Stadics' challenge\n- Added Achievement Animation (see interface addons menu to test with `show`\n- Fixed bug with PartnerUp! which failed when players had class achievements\n- Dungeon tracking additions; removed infractions for lvl 60's, added appeals\n- Fixed some spelling and grammar for new achievements\n- Fixed bug where quests which have a level requirement would not award achievement if turning in quest leveled up the character."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("11.0")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
+	CreateHeadingLabel("11.0", scroll_frame)
+	CreateDescriptionLabel(
 		"- Added a dungeon tab for tracking dungeon stats and completion.\n- Changes to actively prevent illegal trades (addon will block trades from non-trade partners unless you are lvl 60).\n- Increased rep. requirement for Stadic's to 45,000\n- Added 50+ new achievements.  New achievements do not need to be selected at level 1.  See the Achievements tab for more information.\n- Added Duo/Trio appeal codes"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-
-
+	, scroll_frame)
+	
 	---
 
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.5")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Added timer on shivved, sword and board, and berserker which gives the player a minute to unequip.\n- Fixed appeal code\n- Fixed shivved failing on skinning knife\n- Added DuoMade and TrioMade\n- Fixed minor menu crash\n- Added <MOD> tags\n- Added trade appeals"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-
-	---
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.4")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Passive Achievements added (Disabled).\n- Removed speedrunner until alignment is reached.\n- Fixed appeal code for long names\n- removed spam from failed channel connects\n- Fixed scavenger achievement failing when creating items while merchant window is open.\n- Automatically hide talent frame when trying to open it with Not So Talented enabled."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	---
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.3")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Add Speedrunner back as an achievement! New formula for tracking time is being used.\n- Update descriptions for Stadic's challenge and speedrun when mousing over icon\n- Made it more convenient to appeal achievements."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	---
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.2")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Added options to ignore cross-guild chat and alerts (in interface options->Hardcore (not Hardcore:Greenwall!) \n- Fixed fishing poles failing Hammertime, pacifist, and shivved. \n- Fixed alert message which showed a |c before class names. \n -Stadic's challenge now requires 30,000 gained reputation (not total).\n- No longer tells user to ping mod for time gaps under level 20.\n- Updated DUO/TRIO rules"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.1")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Added support for automatic guild notifications across guilds (level up and deaths)\n- Fixed self-made bug."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("10.0")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Added Greenwall (cross-guild chat) integration\n- Added Stadics Challenge (1hp). Stadics Challenge will alert guild members when a point of damage is taken.\n- No Health Achievement bug fixed; Now the player should be able to make potions without failing the challenge.\n- Self-made bug fixed where the player couldn't equip a fishing rode without failing."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("9.5")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Verification string in new menu ui fixed\n- Teleport moonglade fixed (again) for Druid of the Claw\n- Optimizations for level list.  Level list is now paginated and should no longer cause long freezes.\n- Optimizations for accountability tab.  Accountability tab now loads more quickly up on clicking `inspect all`.  Accountability tab no longer causes a stutter every 7 seconds.\n- HC main menu added to UI special frames; Escape key can be used to exit the menu.\n- Dungeon list updated to include BFD and WotLK dungeons\n- Currency tab is now handled correctly.  Previously, the HC tab would overlap with the currency tab, and the currency panel/ hc panel would still be drawn when switching between the two.\n- Self-made achievement updates.  Self-made no longer fails you for equipping tabards or gear with stat bonuses.  Starting gear list of items updated as well.\n- Self-made no longer allows equipping quest items."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("9.4")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Inspect Players in main menu's accountability tab\n- Moonglade correctly detected for duo/trio partners\n- Defaults to modern menu for hardcore show.  To use the old menu again, go to interface options and uncheck the checkbox."
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("9.3")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Fixed issue where trade partner verification check was being recorded for duo/trio partner trades\n"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
-
-	local changelog_title = AceGUI:Create("Label")
-	changelog_title:SetWidth(500)
-	changelog_title:SetText("9.2")
-	changelog_title:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
-	scroll_frame:AddChild(changelog_title)
-
-	local changelog_description = AceGUI:Create("Label")
-	changelog_description:SetWidth(_menu_width)
-	changelog_description:SetText(
-		"- Shivved updated to allow fishing poles\n- Hammertime updated to allow fishing poles\n- Self-made fixed and updated to allow fishing poles and starting gear\n- Force initialize and bound hardcore_settings to fix some lingering with settings\n- Remove character frame taint; Players can now open character frame during combat but not the HC tab\n- Add ability for mods to appeal achievements in-game\n- Added beta modern menu which replaces /hardcore show\n- Minor verbage changes in rules in beta menu\n- Dungeon levels added to rules in beta menu\n- Achievements added to beta menu\n- Formatting fixes for level list and accountability in beta menu\n- Druid of the claw fixed issue where moonglade wasn't allowed\n- Scavenger fixed issue where other addons could buy from merchants\n - Bandaid fix for other addons removing inspect frame"
-	)
-	changelog_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(changelog_description)
+	
 end
 
 local function DrawRulesTab(container)
@@ -731,9 +563,9 @@ local function DrawRulesTab(container)
 		played_time_label:SetText("|c00FFFF00Max Lvl (WotlK)|r")
 		played_time_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 		row_header:AddChild(played_time_label)
-		
+
 		local max_level_table = DungeonTrackerGetAllDungeonMaxLevels()
-		for i,v in pairs( max_level_table ) do
+		for i, v in pairs(max_level_table) do
 			addEntry(scroll_frame, v[1], v[2], v[3])
 		end
 
@@ -820,6 +652,17 @@ local function DrawVerifyTab(container, _hardcore_character)
 		}, ATTRIBUTE_SEPARATOR)
 	end
 
+	local version = GetAddOnMetadata("Hardcore", "Version")
+	local _, class, _, race, _, name = GetPlayerInfoByGUID(UnitGUID("player"))
+	local realm = GetRealmName()
+	local level = UnitLevel("player")
+	local party_mode = _hardcore_character.party_mode
+	local team_1, team_2 = "", ""
+	if _hardcore_character.team ~= nil then		
+		team_1 = _hardcore_character.team[1] or "None"
+		team_2 = _hardcore_character.team[2] or "None"
+	end
+
 	local scroll_container = AceGUI:Create("SimpleGroup")
 	scroll_container:SetFullWidth(true)
 	scroll_container:SetFullHeight(true)
@@ -830,39 +673,77 @@ local function DrawVerifyTab(container, _hardcore_character)
 	scroll_frame:SetLayout("Flow")
 	scroll_container:AddChild(scroll_frame)
 
+	local max_level = 60
+	if
+		(Hardcore_Character.game_version ~= "")
+		and (Hardcore_Character.game_version ~= "Era")
+		and (Hardcore_Character.game_version ~= "SoM")
+	then
+		max_level = 80
+	end
+
+
 	local first_menu_description_title = AceGUI:Create("Label")
 	first_menu_description_title:SetWidth(500)
-	first_menu_description_title:SetText("Verify Your Character")
+	first_menu_description_title:SetText("Verify Your Character - " .. version)
 	first_menu_description_title:SetFont("Interface\\Addons\\Hardcore\\Media\\BreatheFire.ttf", 20, "")
 	scroll_frame:AddChild(first_menu_description_title)
 
-	local general_rules_description = AceGUI:Create("Label")
-	general_rules_description:SetWidth(_menu_width)
-	general_rules_description:SetText("\n\nTo get verified, copy the string below and visit the classichc website.")
-	general_rules_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	scroll_frame:AddChild(general_rules_description)
+	local character_and_level_label = AceGUI:Create("Label")
+	character_and_level_label:SetWidth(_menu_width)
+	character_and_level_label:SetText(
+			"\n\n" .. name 
+		.. " (lvl " .. level .. " " .. race .. " " .. class .. ") on " .. realm
+		.. "\n [" .. party_mode .. ", " 
+		.. team_1 .. ", " .. team_2 .. "]\n"
+		.. "Played: " .. math.floor(0.5 + _hardcore_character.time_played / 360) / 10 .. " hrs\n\n"
+	)
 
-	local first_menu_description = AceGUI:Create("MultiLineEditBox")
-	first_menu_description.button:Hide()
-	first_menu_description:SetMaxLetters(0)
-	first_menu_description:SetHeight(850)
-	first_menu_description.button:SetPoint("BOTTOMLEFT", 0, -150)
-	first_menu_description:SetWidth(750)
-	first_menu_description:SetLabel("")
-	first_menu_description:SetText(GenerateVerificationString())
-	scroll_frame:AddChild(first_menu_description)
+	character_and_level_label:SetFont("Fonts\\FRIZQT__.TTF", 14, "")
+	scroll_frame:AddChild(character_and_level_label)
 
-	local copy_tip_label = AceGUI:Create("Label")
+
+	local extra_lines = ""
+	if UnitLevel("player") < max_level then
+		-- local general_rules_description = AceGUI:Create("Label")
+		-- general_rules_description:SetWidth(_menu_width)
+		-- general_rules_description:SetText("\n\nYou must be max level for your chosen expansion (60 or 80) to get a verification string your character.")
+		-- general_rules_description:SetFont("Fonts\\FRIZQT__.TTF", 14, "")
+		-- scroll_frame:AddChild(general_rules_description)
+		extra_lines = "\n\n\n"
+	else
+		local general_rules_description = AceGUI:Create("Label")
+		general_rules_description:SetWidth(_menu_width)
+		general_rules_description:SetText("\n\nTo get verified, copy the string below and visit the classichc website.")
+		general_rules_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+		scroll_frame:AddChild(general_rules_description)
+
+		local first_menu_description = AceGUI:Create("MultiLineEditBox")
+		first_menu_description.button:Hide()
+		first_menu_description:SetMaxLetters(0)
+		first_menu_description:SetHeight(850)
+		first_menu_description.button:SetPoint("BOTTOMLEFT", 0, -150)
+		first_menu_description:SetWidth(750)
+		first_menu_description:SetLabel("")
+		first_menu_description:SetText(GenerateVerificationString())
+		scroll_frame:AddChild(first_menu_description)
+
+		local copy_tip_label = AceGUI:Create("Label")
+		local text = extra_lines .. "\n\n\n\n\n\n\n\n\n\n\n\n\nSelect All (Ctrl-A), Copy (Ctrl-C), and Paste (Ctrl-V)"
+
+		copy_tip_label:SetText(text)
+		copy_tip_label:SetWidth(700)
+		copy_tip_label:SetFontObject(GameFontHighlightSmall)
+		scroll_frame:AddChild(copy_tip_label)
+	end
+
+	local character_status_label = AceGUI:Create("Label")
 	local statusString1, statusString2 = Hardcore:GenerateVerificationStatusStrings()
-	local text = "\n\n\n\n\n\n\n\n\n\n\n\n\nSelect All (Ctrl-A), Copy (Ctrl-C), and Paste (Ctrl-V)"
-		.. "\n\n\n"
-		.. statusString1
-		.. "\n"
-		.. statusString2
-	copy_tip_label:SetText(text)
-	copy_tip_label:SetWidth(700)
-	copy_tip_label:SetFontObject(GameFontHighlightSmall)
-	scroll_frame:AddChild(copy_tip_label)
+	local text = statusString1 .. "\n" .. statusString2
+	character_status_label:SetText(text)
+	character_status_label:SetWidth(700)
+	character_status_label:SetFontObject(GameFontHighlightMedium)
+	scroll_frame:AddChild(character_status_label)
 end
 
 local function DrawDKTab(container, dk_button_function)
@@ -1183,50 +1064,61 @@ local function DrawLevelsTab(container, _hardcore_settings)
 end
 
 local function DrawDungeonsTab(container, _hardcore_character)
-
 	local name_data
+	local id_data
 	local level_data
 	local played_data
 	local date_data
 	local boss_data
-	local show_boss_column = false		-- For Zdeyn's boss kill time statistic, just set to true
-	
-	local function UpdateDungeonsData(_dt_runs, _dt_pending, _dt_current)
 
+	local function UpdateDungeonsData(_dt_runs, _dt_pending, _dt_current)
 		-- Initialise data
 		local name_str = ""
+		local id_str = ""
 		local date_str = ""
 		local level_str = ""
 		local played_str = ""
-		local boss_str = ""		
+		local boss_str = ""
 
-		-- Put some example boss data; this should come from some function call in the speedcore code
-		local boss_kill_data = {
-			["Ragefire Chasm"] = { 3600, { "Oggleflint", 1300 }, { "Bazzalan", 3600 } },
-			["Wailing Caverns"] = { 4000, { "Lady Anacondra", 1200 }, { "Verdan the Everliving", 4000 } },
-			["The Deadmines"] = { 0, { "Sneed's Shredder", 1300 }, { "Edwin Van Cleef", 5000 } },
-			["Blackfathom Deeps"] = { 4500, { "Ghamoo-Ra", 1100 }, { "Aku'mai", 4500 } },
-			["Scarlet Monastery (Lib)"] = { 2300, { "Houndmaster Loksey", 900 }, { "Arcanist Doan", 2300 } },
-		}
-		
-		local function GetBossTimeString( the_boss_data, the_name )
-			if the_boss_data ~= nil and the_name ~= nil and the_boss_data[ the_name ] ~= nil then
-				if the_boss_data[ the_name ][1] > 0 then 
-					return SecondsToTime(the_boss_data[ the_name ][1]) .. "\n"
+		local function GetBossTimeString(run)
+			local boss_kill_string
+			local total_kill_string
+			local num_bosses, max_bosses, main_boss_kill_time
+			if run.num_kills ~= nil and run.date ~= "(legacy)" then
+				total_kill_string = run.num_kills
+			else
+				total_kill_string = "?"
+			end
+			num_bosses, max_bosses, main_boss_kill_time = DungeonTrackerGetBossKillDataForRun( run )
+			if num_bosses >= 0 then
+				boss_kill_string = num_bosses .. "/" .. max_bosses .. " "
+				if main_boss_kill_time > 0 then
+					boss_kill_string = boss_kill_string .. "(" .. SecondsToTime(main_boss_kill_time) .. ")"
 				else
-					return "X\n"		-- Dungeon done, but end boss not killed
+					boss_kill_string = boss_kill_string .. "(N/A)" 		-- Dungeon done, but end boss not killed
 				end
 			else
-				return "?\n"			-- No info
+				boss_kill_string = "?" -- No info
 			end
+			return total_kill_string .. "/" .. boss_kill_string .. "\n"
+		end
+
+		local function GetInstanceIDString(run)
+			if run.iid ~= nil then
+				return "" .. run.iid
+			elseif run.quest_id ~= nil then
+				return "" .. run.quest_id
+			end
+			return "?"
 		end
 
 		local now = GetServerTime()
-		
+
 		-- Go through the complete, idle and active runs
 		local num_lines = 0
-		for i, v in pairs( _dt_runs ) do
+		for i, v in pairs(_dt_runs) do
 			name_str = name_str .. v.name .. "\n"
+			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			if v.level > 0 then
 				level_str = level_str .. v.level .. "\n"
 			else
@@ -1238,31 +1130,33 @@ local function DrawDungeonsTab(container, _hardcore_character)
 				played_str = played_str .. "?\n"
 			end
 			date_str = date_str .. v.date .. "\n"
-			boss_str = boss_str .. GetBossTimeString( boss_kill_data, v.name )
+			boss_str = boss_str .. GetBossTimeString(v)
 			num_lines = num_lines + 1
 		end
-		for i, v in pairs( _dt_pending ) do
-			name_str = name_str .. "|c00FFFF00" .. v.name .. " (idle, " .. SecondsToTime(v.idle_left) .. ")\n"
-			--name_str = name_str .. "|c00FFFF00" .. v.name .. " (re-entry until " .. date("%H:%M:%S", now +  v.idle_left - 30) .. ")\n"
+		for i, v in pairs(_dt_pending) do
+			name_str = name_str .. "|c00FFFF00" .. v.name .. " (" .. SecondsToTime(v.idle) .. ")\n"
+			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			level_str = level_str .. v.level .. "\n"
 			played_str = played_str .. SecondsToTime(v.time_inside) .. "\n"
 			date_str = date_str .. v.date .. "\n"
-			boss_str = boss_str .. GetBossTimeString( boss_kill_data, v.name )
+			boss_str = boss_str .. GetBossTimeString(v)
 			num_lines = num_lines + 1
 		end
-		if next( _dt_current ) then
+		if next(_dt_current) then
 			name_str = name_str .. "|c0000FF00" .. _dt_current.name .. " (active)\n"
+			id_str = id_str .. GetInstanceIDString(_dt_current) .. "\n"
 			level_str = level_str .. _dt_current.level .. "\n"
 			played_str = played_str .. SecondsToTime(_dt_current.time_inside) .. "\n"
 			date_str = date_str .. _dt_current.date .. "\n"
-			boss_str = boss_str .. GetBossTimeString( boss_kill_data, _dt_current.name )
+			boss_str = boss_str .. GetBossTimeString(_dt_current)
 			num_lines = num_lines + 1
 		end
-		
+
 		-- Make sure we have at least 10 lines, or Ace moves our dungeons down a line
 		num_lines = 10 - num_lines
 		for i = 1, num_lines do
 			name_str = name_str .. "\n"
+			id_str = id_str .. "\n"
 			level_str = level_str .. "\n"
 			played_str = played_str .. "\n"
 			date_str = date_str .. "\n"
@@ -1271,42 +1165,47 @@ local function DrawDungeonsTab(container, _hardcore_character)
 
 		-- Set the new info in the columns
 		name_data:SetText(name_str)
+		id_data:SetText(id_str)
 		date_data:SetText(date_str)
 		level_data:SetText(level_str)
 		played_data:SetText(played_str)
-		if show_boss_column then
-			boss_data:SetText(boss_str)
-		end
+		boss_data:SetText(boss_str)
 	end
+
+	local version = GetAddOnMetadata("Hardcore", "Version")
 
 	-- Add the banner
 	local first_menu_description_title = AceGUI:Create("Label")
-	first_menu_description_title:SetFullWidth(500)
+	first_menu_description_title:SetFullWidth(true)
 	first_menu_description_title:SetText("Dungeon runs\n\n")
 	first_menu_description_title:SetFont("Interface\\Addons\\Hardcore\\Media\\BreatheFire.ttf", 20, "")
 	tabcontainer:AddChild(first_menu_description_title)
 
-	local first_menu_description_title = AceGUI:Create("Label")
-	first_menu_description_title:SetFullWidth(500)
-	first_menu_description_title:SetText(
-				"Dungeons marked with (legacy) are old dungeon runs derived " ..
-				"from completed quests.\nA run marked in white is finalised and the dungeon may not be entered again. " ..
-				"A run marked in|c00FFFF00 yellow|c00FFFFFF is pending, and will be finalised after the timer expires. " ..
-				"A run marked in |c0000FF00 green|c00FFFFFF is the one you are currently on.\n\n")
-	first_menu_description_title:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
-	tabcontainer:AddChild(first_menu_description_title)
-
+	local first_menu_description = AceGUI:Create("Label")
+	first_menu_description:SetFullWidth(true)
+	first_menu_description:SetText(
+			   "Dungeons marked with (legacy) are old dungeon runs derived from completed quests. "
+			.. "A run marked in white is finalised and the dungeon may not be entered again. "
+			.. "A run marked in|c00FFFF00 yellow|c00FFFFFF is pending, and will be finalised after a time of inactivity. "
+			.. "Note that the indicated idle time is not a reliable indicator for the uniqueness of the dungeon ID! "
+			.. "A run marked in|c0000FF00 green|c00FFFFFF is the one you are currently on. "
+			.. "The ID column shows the instance ID or the quest ID for legacy runs. "
+			.. "The Kills column shows total kills, boss kills, max boss kills and end boss kill time. "
+			.. "The instance ID is found by targetting and melee, range or spell interaction with an NPC, but a kill triggers your one HC run!\n\n"
+	)
+	first_menu_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	tabcontainer:AddChild(first_menu_description)
 
 	-- Start making the interface, start with a big frame to hold them all
 	local scroll_container = AceGUI:Create("SimpleGroup")
 	scroll_container:SetFullWidth(true)
-	scroll_container:SetHeight(393)
+	scroll_container:SetHeight(380)
 	scroll_container:SetLayout("Fill")
 	tabcontainer:AddChild(scroll_container)
 
 	-- Add the scrolling part of the frame
 	local scroll_frame = AceGUI:Create("ScrollFrame")
-	scroll_frame:SetLayout("Flow")			-- We want the headers and columns side by side
+	scroll_frame:SetLayout("Flow") -- We want the headers and columns side by side
 	scroll_frame:SetFullWidth(true)
 	scroll_frame:SetFullHeight(true)
 	scroll_container:AddChild(scroll_frame)
@@ -1318,19 +1217,25 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	scroll_frame:AddChild(row_header)
 	-- Name row header
 	local name_label = AceGUI:Create("Label")
-	name_label:SetWidth(405)
+	name_label:SetWidth(280)
 	name_label:SetText("|c00FFFF00Dungeon|r")
 	name_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	row_header:AddChild(name_label)
+	-- ID row header
+	local id_label = AceGUI:Create("Label")
+	id_label:SetWidth(55)
+	id_label:SetText("|c00FFFF00ID|r")
+	id_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	row_header:AddChild(id_label)
 	-- Date row header
 	local date_label = AceGUI:Create("Label")
-	date_label:SetWidth(125)
+	date_label:SetWidth(135)
 	date_label:SetText("|c00FFFF00Date|r")
 	date_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	row_header:AddChild(date_label)
 	-- Level row header
 	local level_label = AceGUI:Create("Label")
-	level_label:SetWidth(50)
+	level_label:SetWidth(40)
 	level_label:SetText("|c00FFFF00Lvl|r")
 	level_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	row_header:AddChild(level_label)
@@ -1342,12 +1247,8 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	row_header:AddChild(played_time_label)
 	-- Boss time row header
 	local boss_time_label = AceGUI:Create("Label")
-	boss_time_label:SetWidth(125)
-	if show_boss_column then
-		boss_time_label:SetText("|c00FFFF00Boss Time|r")
-	else
-		boss_time_label:SetText("")			--- Don't write it
-	end
+	boss_time_label:SetWidth(190)
+	boss_time_label:SetText("|c00FFFF00Kills|r")
 	boss_time_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	row_header:AddChild(boss_time_label)
 
@@ -1359,21 +1260,26 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	scroll_frame:AddChild(data_rows)
 
 	-- Name column
-	local entry 		-- Some container that we don't care about
 	name_data = AceGUI:Create("Label")
-	name_data:SetWidth(405)
+	name_data:SetWidth(280)
 	name_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	data_rows:AddChild(name_data)
 
+	-- ID column (quest or instance)
+	id_data = AceGUI:Create("Label")
+	id_data:SetWidth(55)
+	id_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	data_rows:AddChild(id_data)
+
 	-- Date column
 	date_data = AceGUI:Create("Label")
-	date_data:SetWidth(125)
+	date_data:SetWidth(135)
 	date_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	data_rows:AddChild(date_data)
 
 	-- Level column
 	level_data = AceGUI:Create("Label")
-	level_data:SetWidth(50)
+	level_data:SetWidth(40)
 	level_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	data_rows:AddChild(level_data)
 
@@ -1382,16 +1288,16 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	played_data:SetWidth(125)
 	played_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	data_rows:AddChild(played_data)
-	
+
 	-- Boss column
 	boss_data = AceGUI:Create("Label")
-	boss_data:SetWidth(125)
-	boss_data:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	boss_data:SetWidth(190)
+	boss_data:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	data_rows:AddChild(boss_data)
 
 	-- Fill in the data into the data fields
-	UpdateDungeonsData( _hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current )
-	
+	UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current)
+
 	-- Some weird stuff needed to prevent the scrollframe from malfunctioning
 	local entry = AceGUI:Create("SimpleGroup")
 	entry:SetLayout("Flow")
@@ -1402,22 +1308,22 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	local footer_container = AceGUI:Create("Label")
 	footer_container:SetFullWidth(true)
 	footer_container:SetHeight(10)
-	footer_container:SetText( "\n" )
+	footer_container:SetText("\n")
 	tabcontainer:AddChild(footer_container)
 
 	-- Status label at the bottom
 	local status_label = AceGUI:Create("Label")
 	status_label:SetWidth(350)
-	status_label:SetText("|c00FFFF00You've run " .. #_hardcore_character.dt.runs .. " dungeons.|r")
+	status_label:SetText("|c00FFFF00You've run " 
+				.. #_hardcore_character.dt.runs .. " dungeons. (" 
+				.. GetAddOnMetadata("Hardcore", "Version") .. ", " .. UnitName("player") .. ", " .. UnitLevel("player") .. ")|r")
 	status_label:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	tabcontainer:AddChild(status_label)
 
 	-- Start the ticker that updates the data in the dungeons tab (it gets cancelled in SelectGroup() when you change tabs)
 	hardcore_modern_menu_state.ticker_handler = C_Timer.NewTicker(1, function()
-		UpdateDungeonsData( _hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current )
+		UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current)
 	end)
-
-
 end
 
 local function GetSpacelessRealmName()
@@ -1436,6 +1342,7 @@ local function DrawAccountabilityTab(container)
 			if
 				other_hardcore_character_cache[player_name_short].achievements == nil
 				or #other_hardcore_character_cache[player_name_short].achievements > 0
+				or #other_hardcore_character_cache[player_name_short].passive_achievements > 0
 			then
 				local inline_text = ""
 				for i, achievement_name in ipairs(other_hardcore_character_cache[player_name_short].achievements) do
@@ -1446,7 +1353,9 @@ local function DrawAccountabilityTab(container)
 							.. ":16:16:0:0:64:64:4:60:4:60|t"
 					end
 				end
-				for i, achievement_name in ipairs(other_hardcore_character_cache[player_name_short].passive_achievements) do
+				for i, achievement_name in
+					ipairs(other_hardcore_character_cache[player_name_short].passive_achievements)
+				do
 					if _G.passive_achievements[achievement_name] then
 						inline_text = inline_text
 							.. "|T"
@@ -1463,7 +1372,9 @@ local function DrawAccountabilityTab(container)
 							GameTooltip:AddLine(_G.achievements[achievement_name].title)
 						end
 					end
-					for i, achievement_name in ipairs(other_hardcore_character_cache[player_name_short].passive_achievements) do
+					for i, achievement_name in
+						ipairs(other_hardcore_character_cache[player_name_short].passive_achievements)
+					do
 						if _G.passive_achievements[achievement_name] then
 							GameTooltip:AddLine(_G.passive_achievements[achievement_name].title)
 						end
@@ -1932,6 +1843,289 @@ local function DrawPassiveAchievementsTab(container)
 	scroll_container:AddChild(achievements_title)
 end
 
+local function DrawOfficerToolsTab(container)
+	local scroll_container = AceGUI:Create("SimpleGroup")
+	scroll_container:SetFullWidth(true)
+	scroll_container:SetFullHeight(true)
+	scroll_container:SetLayout("List")
+	tabcontainer:AddChild(scroll_container)
+
+	local scroll_frame = AceGUI:Create("ScrollFrame")
+	scroll_frame:SetLayout("List")
+	scroll_container:AddChild(scroll_frame)
+
+	local officer_announcement_container = AceGUI:Create("SimpleGroup")
+	officer_announcement_container:SetFullWidth(true)
+	officer_announcement_container:SetLayout("List")
+	-- officer_announcement_container:SetTitle("Officer Announcements")
+	scroll_frame:AddChild(officer_announcement_container)
+
+	local announcement_edit_text = AceGUI:Create("EditBox")
+	announcement_edit_text:SetWidth(800)
+	-- announcement_edit_text:SetHeight(120)
+	announcement_edit_text:SetDisabled(false)
+	announcement_edit_text:SetLabel("Send Announcement")
+	announcement_edit_text:SetPoint("TOP", 2, 5)
+	announcement_edit_text:DisableButton(false)
+
+	announcement_edit_text:SetCallback("OnEnterPressed", function()
+	  local text = announcement_edit_text:GetText()
+	  gw.config.channel.guild:send(GW_MTYPE_HC_ANNOUNCEMENT, text)
+	end)
+
+	officer_announcement_container:AddChild(announcement_edit_text)
+
+	local green_wall_config_container = AceGUI:Create("InlineGroup")
+	green_wall_config_container:SetFullWidth(true)
+	green_wall_config_container:SetLayout("Flow")
+	green_wall_config_container:SetTitle("Current Greenwall Configuration")
+	scroll_frame:AddChild(green_wall_config_container)
+
+	local current_gw_config_text = AceGUI:Create("Label")
+	current_gw_config_text:SetWidth(850)
+
+	local peer_guild_text = "    Peer Guilds:\n        "
+
+	for k,v in pairs(gw.config.peer) do
+	  peer_guild_text = peer_guild_text .. "|c0000FFFF" .. k .. "|r "
+	end
+
+	peer_guild_text = peer_guild_text .. "\n\n    Custom Options:\n" 
+	
+	if hc_self_block_flag and hc_self_block_flag == true then
+	  peer_guild_text = peer_guild_text .. "        |c00FFFF00Defense Mode|r  - Players from this guild will not emit death alerts\n"
+	end
+
+	if hc_gw_lfgm_mode and hc_gw_lfgm_mode == true then
+	  peer_guild_text = peer_guild_text .. "        |c00FFFF00LF Mode|r  - Only `looking for` +/- 10 levels, death alerts, and hc notifications will be communicated across guilds\n"
+	end
+
+	if hc_mute_inguild and tonumber(hc_mute_inguild) > 0 then
+	  peer_guild_text = peer_guild_text .. "        |c00FFFF00Mute low level|r  - Players in this guild under level " .. tonumber(hc_mute_inguild) .. " will be muted\n"
+	end
+
+	peer_guild_text = peer_guild_text .. "\n\n    Banned Tags:\n        " 
+	if gw_banned_tags then
+	  for k,v in pairs(gw_banned_tags) do
+	    peer_guild_text = peer_guild_text .. k .. " "
+	  end
+	end
+
+	peer_guild_text = peer_guild_text .. "\n\n"
+
+	current_gw_config_text:SetText(peer_guild_text)
+
+	current_gw_config_text:SetFont("Fonts\\FRIZQT__.TTF", 11, "")
+	green_wall_config_container:AddChild(current_gw_config_text)
+
+
+	local officer_notes_guide_container = AceGUI:Create("InlineGroup")
+	officer_notes_guide_container:SetFullWidth(true)
+	officer_notes_guide_container:SetHeight(1000)
+	officer_notes_guide_container:SetLayout("Flow")
+	officer_notes_guide_container:SetTitle("Officer Notes Guide")
+	scroll_frame:AddChild(officer_notes_guide_container)
+
+	local officer_notes_guide_text = AceGUI:Create("Label")
+	officer_notes_guide_text:SetWidth(850)
+	officer_notes_guide_text:SetText(
+		"The followiong commands are used in officer notes to configure greenwall.\n\n |c00FFFF00GWr:|r - Puts guild into LFG/LFM mode. In LFG/LFM mode, x-guild chat will only show up for LF messages and only if the requester is within 10 levels of the receiving character. Announcements can still be made using the announcement tool below. NOTE that there must be a color `:`.\nExample usage: |c00FFFF00GWr:|r\n\n |c00FFFF00GWd:|r - Puts guild into HC defense mode. NOTE that the colon `:` is needed. If this is put into officer notes, players in this guild will not emit a death notice.\nExample usage: |c00FFFF00GWd:|r\n\n |c00FFFF00GWi:x|r - Mute guild member under x level.\nExample usage: |c00FFFF00GWi:15|r, will mute players (within the guild) under level 15\n\n |c00FFFF00GWb:x|r - Mutes messages coming from a guild with the matching tag.\nExample usage: |c00FFFF00GWb:HG|r, will mute all messages coming from HG players.\n\n |c00FFFF00GWp:<GuildName>:<GuildTag>|r - Adds a peer guild. Messages coming from other guilds will be prefixed with <GuildTag>.\nExample usage: |c00FFFF00GWp:HC Honor Guard:HG|r - Players will get messages from HC Honor Guard, which will be prefixed with <HG>.\n\n |c00FFFF00GWc:<CustomChannelName>:<ChannelPassword>|r - [REQUIRED] This determines what channel and password to use for communication.\nExample usage: |c00FFFF00GWc:HCCommonCommunicationChannel:SomeHCPassword|r - Players will communicate over the hidden HCCommonCommunicationChannel which requires SomeHCPassword password.\n\n"
+	)
+	officer_notes_guide_text:SetFont("Fonts\\FRIZQT__.TTF", 11, "")
+	officer_notes_guide_container:AddChild(officer_notes_guide_text)
+
+end
+
+local function DrawDeathStatisticsTab(container, _hardcore_settings)
+	local scroll_container = AceGUI:Create("SimpleGroup")
+	scroll_container:SetFullWidth(true)
+	scroll_container:SetFullHeight(true)
+	scroll_container:SetLayout("Fill")
+	tabcontainer:AddChild(scroll_container)
+
+	local scroll_frame = AceGUI:Create("ScrollFrame")
+	scroll_frame:SetLayout("List")
+	scroll_container:AddChild(scroll_frame)
+
+	local first_menu_description_title = AceGUI:Create("Label")
+	first_menu_description_title:SetWidth(500)
+	first_menu_description_title:SetText("Death Statistics")
+	first_menu_description_title:SetFont("Interface\\Addons\\Hardcore\\Media\\BreatheFire.ttf", 20, "")
+	-- first_menu_description_title:SetPoint("TOP", 2,5)
+	scroll_frame:AddChild(first_menu_description_title)
+	if _hardcore_settings["death_log_entries"] == nil then return end
+
+	local first_menu_description = AceGUI:Create("Label")
+	first_menu_description:SetWidth(_menu_width)
+	first_menu_description:SetText("Statistics for deaths that you have witnessed. You have witnessed " .. #_hardcore_settings["death_log_entries"] .. " deaths.\n\n\n")
+	first_menu_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	scroll_frame:AddChild(first_menu_description)
+
+	local death_map_button_container = AceGUI:Create("SimpleGroup")
+	local death_map_button = AceGUI:Create("Button")
+	death_map_button:SetText("Show deaths in my zone")
+	death_map_button:SetWidth(200)
+
+	death_map_button:SetCallback("OnClick", function()
+	  local WorldMapButton = WorldMapFrame:GetCanvas()
+	  local death_tomb_frame = CreateFrame('frame', nil, WorldMapButton)
+	  death_tomb_frame:SetAllPoints()
+	  death_tomb_frame:SetFrameLevel(15000)
+	  death_tomb_frame.entry_textures = {}
+
+
+	  for k,v in ipairs(_hardcore_settings["death_log_entries"]) do
+	    if v["map_id"] and v["map_pos"] then
+		  local death_tomb_frame_tex = death_tomb_frame:CreateTexture(nil, 'OVERLAY')
+		  death_tomb_frame_tex:SetTexture("Interface\\TARGETINGFRAME\\UI-TargetingFrame-Skull")
+		  death_tomb_frame_tex:SetDrawLayer("OVERLAY", 4)
+		  death_tomb_frame_tex:SetHeight(25)
+		  death_tomb_frame_tex:SetWidth(25)
+		  death_tomb_frame_tex:Hide()
+
+		  death_tomb_frame_tex.map_id = v["map_id"]
+		  local x, y = strsplit(",", v["map_pos"],2)
+		  death_tomb_frame_tex.coordinates = {x,y}
+		  table.insert(death_tomb_frame.entry_textures, death_tomb_frame_tex)
+	    end
+	  end
+	  WorldMapFrame:SetShown(not WorldMapFrame:IsShown())
+	  local map_id = WorldMapFrame:GetMapID()
+	  local mWidth, mHeight = WorldMapFrame:GetCanvas():GetSize()
+	  for k,v in ipairs(death_tomb_frame.entry_textures) do
+	    if v.map_id == map_id then
+	      v:SetPoint('CENTER', WorldMapButton, 'TOPLEFT', mWidth*v.coordinates[1], -mHeight*v.coordinates[2])
+	      v:Show()
+	    end
+	  end
+
+	  WorldMapFrame:HookScript("OnHide", function()
+	    if death_tomb_frame == nil then return end
+	    if death_tomb_frame.entry_textures == nil then return end
+	    for k,v in ipairs(death_tomb_frame.entry_textures) do
+		v:Hide()
+		v = nil
+	    end
+	    death_tomb_frame = nil
+	  end)
+
+	end)
+	scroll_frame:AddChild(death_map_button)
+
+
+	local function getDefaultStats()
+	    return {["sum"] = 0, ["num"] = 0}
+	end
+	local stats = {}
+	stats["avg_level"] = getDefaultStats()
+	stats["avg_level_class"] = {}
+
+	local detected_classes = {
+	}
+	for i,v in pairs(_hardcore_settings["death_log_entries"]) do
+	  if v["level"] then
+	    stats["avg_level"]["sum"] = stats["avg_level"]["sum"] + v["level"]
+	    stats["avg_level"]["num"] = stats["avg_level"]["num"] + 1
+	    if v["class_id"] then
+	      if stats["avg_level_class"][v["class_id"]] == nil then
+		stats["avg_level_class"][v["class_id"]] = getDefaultStats()
+	      end
+	      detected_classes[v["class_id"]] = 1
+	      stats["avg_level_class"][v["class_id"]]["sum"] = stats["avg_level_class"][v["class_id"]]["sum"] + v["level"]
+	      stats["avg_level_class"][v["class_id"]]["num"] = stats["avg_level_class"][v["class_id"]]["num"] + 1
+	    end
+	  end
+	end
+
+	local class_stats_container = AceGUI:Create("InlineGroup")
+	class_stats_container:SetLayout("List")
+	scroll_frame:AddChild(class_stats_container)
+
+	local subtitles = {
+	  {"Class", 0},
+	  {"# Recorded", 90},
+	  {"%", 180},
+	  {"Avg. Death Lvl.", 275},
+	}
+
+	local class_types = {
+	}
+
+	local entry_data = {}
+	for k,_ in pairs(detected_classes) do 
+	  class_types[k] = 1
+	  stats["avg_level_class"][k]["avg"] = stats["avg_level_class"][k]["sum"]/stats["avg_level_class"][k]["num"]
+	  local class_str, _, _ = GetClassInfo(k)
+	  entry_data[k] = {}
+	  entry_data[k]["Class"] = class_str
+	  entry_data[k]["# Recorded"] = stats["avg_level_class"][k]["num"] 
+	  entry_data[k]["%"] = string.format("%.1f", stats["avg_level_class"][k]["num"] / stats["avg_level"]["num"] * 100.0) .. "%"
+	  entry_data[k]["Avg. Death Lvl."] = string.format("%.1f", stats["avg_level_class"][k]["avg"])  
+	end
+
+	class_types["All"] = 1
+	stats['avg_level']['avg'] = stats["avg_level"]["sum"]/stats["avg_level"]["num"]
+
+	entry_data["All"] = {}
+	entry_data["All"]["Class"] = "All"
+	entry_data["All"]["# Recorded"] = stats["avg_level"]["num"]
+	entry_data["All"]["%"] = "100%"
+	entry_data["All"]["Avg. Death Lvl."] = string.format("%.1f", stats["avg_level"]["avg"]) 
+
+	local header = AceGUI:Create("Label")
+	header:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
+	header:SetText(" ")
+	class_stats_container:SetWidth(400)
+	header.font_strings = {}
+	for _, v in ipairs(subtitles) do
+	  header.font_strings[v[1]] = header.frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	  header.font_strings[v[1]]:SetPoint("LEFT", header.frame, "LEFT", v[2], 0)
+	  header.font_strings[v[1]]:SetText(v[1])
+	end
+	class_stats_container:AddChild(header)
+
+	local entries = {}
+	for k,_ in pairs(class_types) do
+	  local entry = AceGUI:Create("Label")
+	  table.insert(entries, entry)
+	  entry:SetText(" ")
+	  entry.font_strings = {}
+	  for _, v in ipairs(subtitles) do
+	    entry.font_strings[v[1]] = entry.frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	    entry:SetFont("Fonts\\FRIZQT__.TTF", 16, "")
+	    entry.font_strings[v[1]]:SetPoint("LEFT", entry.frame, "LEFT", v[2], 0)
+	    entry.font_strings[v[1]]:SetTextColor(1,1,1)
+	    entry.font_strings[v[1]]:SetText(entry_data[k][v[1]])
+	  end
+	  class_stats_container:AddChild(entry)
+	end
+
+	scroll_frame.frame:HookScript("OnHide", function()
+	  death_tomb_frame = nil
+	  if header ~= nil then
+	    for k,_ in pairs(header.font_strings) do 
+	      header.font_strings[k]:Hide()
+	      header.font_strings[k] = nil
+	    end
+	    header = nil 
+	  end
+
+	  if entries ~= nil then
+	    for _,v in ipairs(entries) do
+	      for k,_ in pairs(v.font_strings) do 
+		v.font_strings[k]:Hide()
+		v.font_strings[k] = nil
+	      end
+	      v = nil 
+	    end
+	    entries = nil
+	  end
+	end)
+
+
+
+end
+
 function ShowMainMenu(_hardcore_character, _hardcore_settings, dk_button_function)
 	hardcore_modern_menu = AceGUI:Create("HardcoreFrameModernMenu")
 	hardcore_modern_menu:SetCallback("OnClose", function(widget)
@@ -1960,7 +2154,7 @@ function ShowMainMenu(_hardcore_character, _hardcore_settings, dk_button_functio
 	hardcore_modern_menu:SetWidth(_menu_width)
 
 	tabcontainer = AceGUI:Create("TabGroup") -- "InlineGroup" is also good
-	tabcontainer:SetTabs({
+	local tab_table = {
 		{ value = "WelcomeTab", text = "General" },
 		{ value = "RulesTab", text = "Rules" },
 		{ value = "VerifyTab", text = "Verify" },
@@ -1969,7 +2163,13 @@ function ShowMainMenu(_hardcore_character, _hardcore_settings, dk_button_functio
 		{ value = "DungeonsTab", text = "Dungeons" },
 		{ value = "AccountabilityTab", text = "Accountability" },
 		{ value = "AchievementsTab", text = "Achievements" },
-	}) -- ,
+		{ value = "DeathStatisticsTab", text = "Death Statistics" },
+	}
+	if hc_guild_rank_index and hc_guild_rank_index < 2 then -- 0 is GM, 1 is generally officer
+	  table.insert(tab_table, { value = "OfficerToolsTab", text = "Officer Tools" })
+	end
+
+	tabcontainer:SetTabs(tab_table)
 	tabcontainer:SetFullWidth(true)
 	tabcontainer:SetFullHeight(true) -- probably?
 	tabcontainer:SetLayout("Flow") -- important!
@@ -2008,6 +2208,10 @@ function ShowMainMenu(_hardcore_character, _hardcore_settings, dk_button_functio
 			scroll_container:AddChild(scroll_frame)
 		elseif group == "AchievementsTab" then
 			achievement_tab_handler:DrawAchievementTab(tabcontainer, _hardcore_character, false)
+		elseif group == "DeathStatisticsTab" then
+			DrawDeathStatisticsTab(tabcontainer, _hardcore_settings)
+		elseif group == "OfficerToolsTab" then
+			DrawOfficerToolsTab(container)
 		end
 	end
 

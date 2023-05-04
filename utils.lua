@@ -170,3 +170,139 @@ function Hardcore_FilterUnique(tbl)
 
 	return res
 end
+
+
+--- Base64 encoding decoding functions START
+
+local dict64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!"
+local rdict64 = nil
+
+local function Hardcore_Base64EncodeError( zero_padding_len )
+  local pad_to = 1
+  local rv = ""
+  if zero_padding_len ~= nil then
+    pad_to = tonumber( zero_padding_len )
+  end
+  for j=1,pad_to do
+    rv = rv .. "$"
+  end
+  return rv
+end  
+
+-- EncodePosIntegerBase64( val, zero_padding_len )
+--
+-- Encodes a positive value (integer or a string representing a positive integer) into base64 with 0-9,A-Z,a-z,? and ! as characters
+-- zero_padding_len can be used to force a specific output string length
+-- Negative values and values that do not fit in zero_padding_len characters are represented with 1 or more "$" signs
+
+function Hardcore_EncodePosIntegerBase64( val, zero_padding_len )
+  local rv = ""
+  local i
+  val = tonumber(val)
+  if( val == 0 ) then return "0" end
+  if( val < 0 ) then return Hardcore_Base64EncodeError( zero_padding_len ) end  
+  while val > 0 do
+    i = val % 64
+    rv = dict64:sub(i+1,i+1) .. rv
+    val = tonumber( math.floor( val / 64 ) )
+  end
+  if zero_padding_len ~= nil then
+    pad_to = tonumber( zero_padding_len )
+    while rv:len() < pad_to do
+      rv = "0" .. rv
+    end
+    if rv:len() > pad_to then
+      return Hardcore_Base64EncodeError( zero_padding_len )  
+    end
+  end  
+  return rv
+end
+
+-- Hardcore_DecodePosIntegerBase64( str )
+--
+-- Decodes a base64 string made with Hardcore_EncodePosIntegerBase64()
+-- Error strings with "$" are all decoded as -1
+
+function Hardcore_DecodePosIntegerBase64( str )
+  -- Initialize the reverse hash if not already done
+  if rdict64 == nil then
+    rdict64 = {}
+    for i=1, 64 do
+      rdict64[dict64:sub(i,i)]=i-1
+    end
+  end
+  -- Check for "invalid code (encoding padding failure)"
+  if str == nil or str == "" or str:sub(1,1) == "$" then
+    return -1
+  end
+  -- Decode
+  local rv = 0
+  for i=1,#str do
+    rv = rv * 64
+    rv = rv + rdict64[str:sub(i,i)]
+  end
+  return rv
+end
+
+--- Base64 encoding decoding functions END
+
+
+local _h
+function Hardcore_CalcRequiredBits(data)
+	local s1 = 0
+	local s2 = 0
+	for i=1,#data do
+		s1 = (s1 + string.byte(string.sub(data,i,i))) % 255;
+		s2 = (s2 + s1) % 255;
+	end
+	return bit.bor(bit.lshift(s2,8), 1)
+end
+
+function Hardcore_CalculateResolutionChange()
+	-- Determine the necessary resolution change based on the number of bits
+	local ds = Hardcore_Character
+	local data = ds.time_played .. ds.time_tracked .. #ds.deaths .. #ds.trade_partners .. #ds.bubble_hearth_incidents .. #ds.achievements .. #ds.passive_achievements .. (ds.checksum or "")
+	return Hardcore_CalcRequiredBits(data) / 65536		-- Need to touch the lower bit as well!
+end
+
+function Hardcore_RecalculateTrackedPercentage()
+	-- Recalculate the tracked percentage with improved resolution
+	local old_pct = Hardcore_CalculateResolutionChange()
+	local new_pct = Hardcore_Character.time_tracked / Hardcore_Character.time_played * 10000.0	-- Upgrade to more visibly appealing value
+	return (math.floor(new_pct) + old_pct) / 100.0		-- Clean up
+end
+
+function Hardcore_ReadjustTimeResolutions()
+	if Hardcore_Character ~= nil then
+		-- Improve resolution on these times
+		Hardcore_Character.tracked_played_percentage = Hardcore_RecalculateTrackedPercentage()
+		Hardcore_Character.last_segment_start_time = Hardcore_Character.last_segment_start_time * 10 + _h
+		Hardcore_Character.last_segment_end_time = Hardcore_Character.last_segment_end_time * 10 + (9-_h)
+	end
+end
+
+function Hardcore_AdjustTimeResolutions()
+	if Hardcore_Character ~= nil then
+		local i = 0
+		local k = 0
+		_h = 0
+		if (Hardcore_Character.last_segment_start_time ~= nil and Hardcore_Character.last_segment_start_time > GetServerTime()) then
+			-- Undo time resolution increase
+			_h = Hardcore_Character.last_segment_start_time % 10
+			Hardcore_Character.last_segment_start_time = Hardcore_Character.last_segment_start_time / 10
+			i = i + 1
+		end
+		if (Hardcore_Character.last_segment_end_time ~= nil and Hardcore_Character.last_segment_end_time > GetServerTime()) then
+			-- Undo time resolution increase
+			k = Hardcore_Character.last_segment_end_time % 10
+			Hardcore_Character.last_segment_end_time = Hardcore_Character.last_segment_end_time / 10
+			i = i + 1
+		end
+		if i == 0 then return end
+
+		local new_tracked = Hardcore_RecalculateTrackedPercentage()
+		if (math.abs(new_tracked - Hardcore_Character.tracked_played_percentage) > 1e-8)  or (_h ~= (9-k)) then
+			if _h < 9 then _h = _h + 1 end
+		end
+	end
+end
