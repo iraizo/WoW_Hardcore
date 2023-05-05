@@ -2947,6 +2947,7 @@ function Hardcore:GenerateVerificationStatusStrings()
 
 	-- if appeals key exists in Hardcore_Character, use it, otherwise return zero
 	local numAppeals = Hardcore_Character.appeals and #Hardcore_Character.appeals or 0
+	local numRealDeaths = Hardcore_Character.deaths and #Hardcore_Character.deaths or 0
 
 	local perc = string.format("tracked_time=%.1f%%", Hardcore_Character.tracked_played_percentage)
 	local numTrades = #Hardcore_Character.trade_partners
@@ -3003,11 +3004,11 @@ function Hardcore:GenerateVerificationStatusStrings()
 	-- Group the green, orange and red because for some weird reason we can't switch colours too often in one line
 
 	if #Hardcore_Character.deaths > 0 then
-		table.insert(reds, "deaths=" .. #Hardcore_Character.deaths)
+		table.insert(reds, "deaths=" .. numRealDeaths)
 	end
 
 	if numAppeals > 0 then
-		table.insert(greens, "appeals=" .. numAppeals)
+		table.insert(reds, "appeals=" .. numAppeals)
 	end
 
 	if numTrades > 0 then
@@ -3052,7 +3053,7 @@ function Hardcore:GenerateVerificationStatusStrings()
 
 	-- End with white, so that UpdateVerificationStatus always finds a color at the end
 	statusString = statusString .. COLOR_WHITE
-
+	-- Hardcore:Print("Verification status: " .. verdict .. " " .. statusString)
 	return verdict, statusString
 end
 
@@ -3080,9 +3081,6 @@ function Hardcore:UpdateVerificationStatus()
 	-- Show everything that is in red (so up to the next colour)
 	details = string.match( details, COLOR_RED .. "(.-) |c00" )
 	if details ~= nil then
-		if Hardcore_Character.appeals and #Hardcore_Character.appeals > 0 then
-			details = details .. ",appeals=" .. #Hardcore_Character.appeals
-		end
 		Hardcore_Character.verification_details = "(" .. details .. ")"
 	else
 		Hardcore_Character.verification_details = ""
