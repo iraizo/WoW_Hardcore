@@ -220,6 +220,22 @@ local function SlashCmd_AppealDuoTrio(args)
 	end
 end
 
+local function SlashCmd_ShowAppeals( args )
+
+	-- DEBUG CODE:
+	-- Allow the player to see appeals
+	-- This is a debug function, and should be removed before release
+
+	local usage = "Usage: /hc ShowAppeals"
+	
+	-- iterate through Hardcore_Character.appeals and print the date of each death
+	Hardcore:Print("Appeals:")
+	for i,v in ipairs(Hardcore_Character.appeals) do
+		Hardcore:Print( i .. ": death - \"" .. v.death .. "\"" )
+	end
+
+end
+
 local function SlashCmd_ShowDeaths( args )
 
 	-- DEBUG CODE:
@@ -284,12 +300,22 @@ local function SlashCmd_AppealDeath( args )
 			local appeal_code = get_long_code( Hardcore_Character.deaths[ index ].player_dead_trigger )
 
 			-- DEBUG CODE
-			Hardcore:Print("Appeal code: " .. appeal_code)
+			-- Hardcore:Print("Appeal code: " .. appeal_code)
 			
 			-- if the triplet doesn't match, refuse the appeal code
 			if tonumber( code ) ~= tonumber( appeal_code ) then
 				Hardcore:Print("Incorrect code. Double check with a moderator/developer." )
 				return
+			end
+
+			-- Check if the appeal already exists in the table
+			if Hardcore_Character.appeals then
+				for i,v in ipairs( Hardcore_Character.appeals ) do
+					if Hardcore_Character.appeals[ i ].death == Hardcore_Character.deaths[ index ].player_dead_trigger then
+						Hardcore:Print("Appeal already exists for " .. Hardcore_Character.deaths[ index ].player_dead_trigger)
+						return
+					end
+				end
 			end
 			
 			-- Appeal the death
@@ -454,6 +480,9 @@ local function SlashHandler(msg, editbox)
 	-- DEBUG
 	elseif cmd == "ShowDeaths" then
 		SlashCmd_ShowDeaths(args)
+
+	elseif cmd == "ShowAppeals" then
+		SlashCmd_ShowAppeals(args)
 
 	else
 		-- If not handled above, display some sort of help message

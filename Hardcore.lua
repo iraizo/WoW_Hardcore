@@ -2944,6 +2944,10 @@ end
 function Hardcore:GenerateVerificationStatusStrings()
 	local statusString = ""
 	local numDeaths = #Hardcore_Character.deaths
+
+	-- if appeals key exists in Hardcore_Character, use it, otherwise return zero
+	local numAppeals = Hardcore_Character.appeals and #Hardcore_Character.appeals or 0
+
 	local perc = string.format("tracked_time=%.1f%%", Hardcore_Character.tracked_played_percentage)
 	local numTrades = #Hardcore_Character.trade_partners
 	local numBubs = #Hardcore_Character.bubble_hearth_incidents
@@ -2963,6 +2967,20 @@ function Hardcore:GenerateVerificationStatusStrings()
 		numOverLevelRuns = 0
 	end
 
+	if Hardcore_Character.appeals ~= nil then	
+		-- Match Deaths and Appeals, removing a death count for each one
+		for i, v in ipairs(Hardcore_Character.appeals) do
+			for j, w in ipairs(Hardcore_Character.deaths) do
+				if v.death == w.player_dead_trigger then
+					numDeaths = numDeaths - 1
+					break
+				end
+			end
+		end
+	else
+		Hardcore_Character.appeals = {}
+	end
+
 	-- Determine the end verdict. Any trades or deaths or bubs give a fail
 	if
 		numTrades > 0
@@ -2976,7 +2994,7 @@ function Hardcore:GenerateVerificationStatusStrings()
 			and Hardcore:ShouldShowPlaytimeWarning(UnitLevel("player"), Hardcore_Character.tracked_played_percentage)
 		)
 	then
-		verdict = COLOR_YELLOW .. "FAIL (see proper Discord channel)"
+		verdict = COLOR_YELLOW .. "FAIL (SEE DISCORD)"
 	else
 		verdict = COLOR_GREEN .. "PASS"
 	end
@@ -2984,16 +3002,12 @@ function Hardcore:GenerateVerificationStatusStrings()
 
 	-- Group the green, orange and red because for some weird reason we can't switch colours too often in one line
 
-	if Hardcore_Character.tracked_played_percentage >= 95 then
-		table.insert(greens, perc)
-	elseif Hardcore_Character.tracked_played_percentage >= 90 then
-		table.insert(yellows, perc)
-	else
-		table.insert(reds, perc)
+	if #Hardcore_Character.deaths > 0 then
+		table.insert(reds, "deaths=" .. #Hardcore_Character.deaths)
 	end
 
-	if numDeaths > 0 then
-		table.insert(reds, "deaths=" .. numDeaths)
+	if numAppeals > 0 then
+		table.insert(greens, "appeals=" .. numAppeals)
 	end
 
 	if numTrades > 0 then
@@ -3016,6 +3030,14 @@ function Hardcore:GenerateVerificationStatusStrings()
 		table.insert(yellows, "data_file=?")
 	else
 		table.insert(reds, "data_file=" .. dataFileSecurity)
+	end
+	
+	if Hardcore_Character.tracked_played_percentage >= 95 then
+		table.insert(greens, perc)
+	elseif Hardcore_Character.tracked_played_percentage >= 90 then
+		table.insert(yellows, perc)
+	else
+		table.insert(reds, perc)
 	end
 
 	if #reds > 0 then
@@ -3058,6 +3080,9 @@ function Hardcore:UpdateVerificationStatus()
 	-- Show everything that is in red (so up to the next colour)
 	details = string.match( details, COLOR_RED .. "(.-) |c00" )
 	if details ~= nil then
+		if Hardcore_Character.appeals and #Hardcore_Character.appeals > 0 then
+			details = details .. ",appeals=" .. #Hardcore_Character.appeals
+		end
 		Hardcore_Character.verification_details = "(" .. details .. ")"
 	else
 		Hardcore_Character.verification_details = ""
