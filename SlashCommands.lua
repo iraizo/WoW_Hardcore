@@ -220,11 +220,21 @@ local function SlashCmd_AppealDuoTrio(args)
 	end
 end
 
+local function SlashCmd_ShowDeaths( args )
 
+	-- DEBUG CODE:
+	-- Allow the player to see the date of deaths, so they may be appealed
+	-- This is a debug function, and should be removed before release
 
--- DungeonTrackerHandleAppealCode( args )
---
--- Called from Hardcore.lua when user types /hc AppealDungeonCode
+	local usage = "Usage: /hc ShowDeaths"
+	
+	-- iterate through Hardcore_Character.deaths and print the date of each death
+	Hardcore:Print("Deaths:")
+	for i,v in ipairs(Hardcore_Character.deaths) do
+		Hardcore:Print( i .. ": \"" .. v.player_dead_trigger .. "\"" )
+	end
+
+end
 
 local function SlashCmd_AppealDeath( args )
 
@@ -256,27 +266,31 @@ local function SlashCmd_AppealDeath( args )
 		Hardcore:Print(usage)
 		return
 	else
-		-- Look for the run with that dungeon and date
+		-- Look for the death with matching date
+		local death_date = quoted_args[1]
 		local death_found = false
 		local index = 0
 		for i,v in ipairs( Hardcore_Character.deaths ) do
-			if Hardcore_Character.deaths[ i ].player_dead_trigger == quoted_args[1] then
+			if Hardcore_Character.deaths[ i ].player_dead_trigger == death_date then
 				death_found = true
 				index = i
-			end					
+			end
 		end
 		
-		-- If we find multiple matches, we don't do anything
+		-- If a matching death is found, proceed
 		if death_found == true then
 		
 			-- Check if the hash code is correct
 			local appeal_code = get_long_code( Hardcore_Character.deaths[ index ].player_dead_trigger )
+
+			-- DEBUG CODE
 			Hardcore:Print("Appeal code: " .. appeal_code)
 			
+			-- if the triplet doesn't match, refuse the appeal code
 			if tonumber( code ) ~= tonumber( appeal_code ) then
-				Hardcore:Print("Incorrect code. Double check with a moderator." )
+				Hardcore:Print("Incorrect code. Double check with a moderator/developer." )
 				return
-			end								
+			end
 			
 			-- Appeal the death
 			Hardcore:Print("Appealed death on " .. Hardcore_Character.deaths[ index ].player_dead_trigger)
@@ -284,7 +298,6 @@ local function SlashCmd_AppealDeath( args )
 				Hardcore_Character.appeals = {}
 			end
 			table.insert( Hardcore_Character.appeals, {["death"] = Hardcore_Character.deaths[ index ].player_dead_trigger} )
-			-- DungeonTrackerUpdateInfractions()
 			return
 		else
 			Hardcore:Print( "Death on " .. quoted_args[1] .. " not found!" )
@@ -437,6 +450,10 @@ local function SlashHandler(msg, editbox)
 	
 	elseif cmd == "AppealDeath" then
 		SlashCmd_AppealDeath(args)
+
+	-- DEBUG
+	elseif cmd == "ShowDeaths" then
+		SlashCmd_ShowDeaths(args)
 
 	else
 		-- If not handled above, display some sort of help message
