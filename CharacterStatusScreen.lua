@@ -172,7 +172,7 @@ function extractDetails(str, ignoreKeys)
 	str = str:gsub("^%s*%((.+)%)%s*$", "%1")
 	local details_table = {}
 	for key, value in str:gmatch("(%S+)=(%S+)") do
-		-- Hardcore:Print("extractDetails: " .. key .. " = " .. value)
+		Hardcore:Print("extractDetails: " .. key .. " = " .. value)
 	  -- Check if the current key is in the ignoreKeys array
 		local ignore = false
 		for _, ignoreKey in ipairs(ignoreKeys or {}) do
@@ -292,11 +292,11 @@ function UpdateCharacterHC(
 	local filtered_status = _hardcore_character.verification_status
 	local filtered_details = _hardcore_character.verification_details
 
-	Hardcore:Print("Status: ".. _hardcore_character.verification_status)
+	--Hardcore:Print("Status: ".. _hardcore_character.verification_status)
 
 	if _player_name ~= UnitName("player") then
 		-- Remove tracked_time and deaths entries
-		local ignoreKeys = {"tracked_time", "deaths", "repeat_dung", "overlvl_dung"}
+		local ignoreKeys = {"tracked_time", "deaths", "appeals", "repeat_dung", "overlvl_dung"}
 		local details_table = extractDetails(_hardcore_character.verification_details, ignoreKeys)
 		filtered_details = formatDetails(details_table)
 
@@ -324,9 +324,9 @@ function UpdateCharacterHC(
 
 	local verif_msg = "\n\nVerification status: \n\n"
 	if _hardcore_character.verification_status == nil then
-		verif_msg = verif_msg .. "(unknown - version not supported)" .. "\n\n"
+		verif_msg = verif_msg .. "(unknown - version not supported)"
 	else
-		verif_msg = verif_msg .. filtered_status .. "\n\n"
+		verif_msg = verif_msg .. filtered_status
 	end
 
 	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
@@ -351,10 +351,10 @@ function UpdateCharacterHC(
 	character_meta_data_container:AddChild(hc_tag_h)
 	
 	local explanatory_key_msg = ""
-	.. "\n\nWhat does this mean?\n\n"
-	.. "|cff1eff0cPASS|r - Valid HC Character, Dungeon-legal\n\n"
-	.. "|cffff8000PENDING|r - Death or data appeal in progress\n\n"
-	.. "|cffff3f40FAIL|r - Has failed the challenge - DO NOT GROUP WITH\n\n"
+	.. "\n\nWhat does this mean?\n"
+	.. "|cff1eff0cPASS|r - Valid HC Character, Dungeon-legal\n"
+	.. "|cffff8000PENDING|r - Death or data appeal in progress\n"
+	.. "|cffff3f40FAIL|r - Has failed the challenge - INVALID CHARACTER\n"
 	
 	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
 	hc_tag_g:SetRelativeWidth(1.0)
@@ -365,8 +365,8 @@ function UpdateCharacterHC(
 
 	local v_buffer = AceGUI:Create("Label")
 	v_buffer:SetRelativeWidth(1.0)
-	v_buffer:SetHeight(100)
-	v_buffer:SetText("\n\n\n")
+	v_buffer:SetHeight(50)
+	v_buffer:SetText("\n")
 	frame_to_update:AddChild(v_buffer)
 
 	local achievements_container = AceGUI:Create("SimpleGroup")
