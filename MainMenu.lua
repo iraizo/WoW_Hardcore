@@ -1112,12 +1112,19 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			return "?"
 		end
 
+		local function GetEntryCountString(run)
+			if run.num_entries ~= nil and run.num_entries > 1 then
+					return " [" .. run.num_entries .. "]"
+			end
+			return ""
+		end
+
 		local now = GetServerTime()
 
 		-- Go through the complete, idle and active runs
 		local num_lines = 0
 		for i, v in pairs(_dt_runs) do
-			name_str = name_str .. v.name .. "\n"
+			name_str = name_str .. v.name .. GetEntryCountString(v) .. "\n"
 			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			if v.level > 0 then
 				level_str = level_str .. v.level .. "\n"
@@ -1134,7 +1141,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			num_lines = num_lines + 1
 		end
 		for i, v in pairs(_dt_pending) do
-			name_str = name_str .. "|c00FFFF00" .. v.name .. " (" .. SecondsToTime(v.idle) .. ")\n"
+			name_str = name_str .. "|c00FFFF00" .. v.name .. GetEntryCountString(v) .. " (" .. SecondsToTime(v.idle) .. ")\n"
 			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			level_str = level_str .. v.level .. "\n"
 			played_str = played_str .. SecondsToTime(v.time_inside) .. "\n"
@@ -1143,7 +1150,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			num_lines = num_lines + 1
 		end
 		if next(_dt_current) then
-			name_str = name_str .. "|c0000FF00" .. _dt_current.name .. " (active)\n"
+			name_str = name_str .. "|c0000FF00" .. _dt_current.name .. GetEntryCountString(_dt_current) .. " (active)\n"
 			id_str = id_str .. GetInstanceIDString(_dt_current) .. "\n"
 			level_str = level_str .. _dt_current.level .. "\n"
 			played_str = played_str .. SecondsToTime(_dt_current.time_inside) .. "\n"
@@ -1187,11 +1194,12 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			   "Dungeons marked with (legacy) are old dungeon runs derived from completed quests. "
 			.. "A run marked in white is finalised and the dungeon may not be entered again. "
 			.. "A run marked in|c00FFFF00 yellow|c00FFFFFF is pending, and will be finalised after a time of inactivity. "
-			.. "Note that the indicated idle time is not a reliable indicator for the uniqueness of the dungeon ID! "
+			.. "The indicated idle time is not an indicator for the validity of the dungeon ID! "
 			.. "A run marked in|c0000FF00 green|c00FFFFFF is the one you are currently on. "
-			.. "The ID column shows the instance ID or the quest ID for legacy runs. "
+			.. "The ID column shows the dungeon ID or the quest ID for legacy runs. "
 			.. "The Kills column shows total kills, boss kills, max boss kills and end boss kill time. "
-			.. "The instance ID is found by targetting and melee, range or spell interaction with an NPC, but a kill triggers your one HC run!\n\n"
+			.. "The dungeon ID is found by targetting or interacting with an NPC, but a kill triggers your one HC run! "
+			.. "Staying inside a dungeon for too long will also trigger your one HC run (even without kills)\n\n"
 	)
 	first_menu_description:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
 	tabcontainer:AddChild(first_menu_description)

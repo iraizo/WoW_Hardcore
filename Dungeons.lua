@@ -638,6 +638,28 @@ local function DungeonTrackerLogRun(run)
 	DungeonTrackerUpdateInfractions()
 end
 
+-- DungeonTrackerUpdateEntryCount()
+--
+-- Keeps count of how often each dungeon has been entered
+-- (= 1 + number of reconnects)
+
+local function DungeonTrackerUpdateEntryCount()
+
+	local name = Hardcore_Character.dt.current.name
+	if name == nil then
+		return
+	end
+
+	-- Create the count if we don't have it already
+	if Hardcore_Character.dt.current.num_entries == nil then
+		Hardcore_Character.dt.current.num_entries = 0
+	end
+
+	-- Update or create the entry for this dungeon
+	Hardcore_Character.dt.current.num_entries = Hardcore_Character.dt.current.num_entries + 1
+
+end
+
 -- DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 --
 -- Finds the SM wing in which a certain mob_type_id is found. Only works for unique mob_ids,
@@ -645,11 +667,11 @@ end
 
 local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 
-	local SM = "Scarlet Monastery" 
+	local SM = "Scarlet Monastery"
 
 	-- If this is SM (=189), and we don't know the wing yet, we try to find it
 	if map_id == 189 and Hardcore_Character.dt.current.name == SM then
-	
+
 		local wing_spawns = {
 			{4293, "Scarlet Scryer", "GY"},
 			{4306, "Scarlet Torturer", "GY"},
@@ -676,7 +698,7 @@ local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 			{3977, "High Inquisitor Whitemane", "Cath"},
 			{4542, "High Inquisitor Fairbanks", "Cath"},
 		}
-		
+
 		-- See if any of the listed mobs is recognised
 		for i, v in ipairs( wing_spawns ) do
 			if mob_type_id == v[1] then
@@ -686,7 +708,7 @@ local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 			end
 		end
 	end
-	
+
 	-- If not SM, or wing already known, or wing not found, we do nothing
 
 end
@@ -1698,10 +1720,11 @@ local function DungeonTracker()
 				and Hardcore_Character.dt.current.iid ~= nil
 				and Hardcore_Character.dt.pending[i].iid == Hardcore_Character.dt.current.iid 
 			then
-				-- Add the inside time of the current run (should be defined since the iid has been found
+				-- Add the inside time of the current run (should be defined since the iid has been found)
 				Hardcore_Character.dt.pending[i].time_inside = Hardcore_Character.dt.pending[i].time_inside + Hardcore_Character.dt.current.time_inside
 				Hardcore_Character.dt.current = Hardcore_Character.dt.pending[i]
 				table.remove(Hardcore_Character.dt.pending, i)
+				DungeonTrackerUpdateEntryCount()
 				Hardcore:Debug("Reconnected to pending run in " .. Hardcore_Character.dt.current.name)
 				break
 			elseif Hardcore_Character.dt.pending[i].iid ~= nil 			-- Should never happen, but yeah...
@@ -1748,9 +1771,12 @@ local function DungeonTracker()
 		if DungeonTrackerDatabaseHasBossInfo( name ) then
 			DUNGEON_RUN.bosses = {}
 		end
-		
+
 		Hardcore_Character.dt.current = DUNGEON_RUN
 		Hardcore:Debug("Starting new run in " .. Hardcore_Character.dt.current.name)
+
+		-- Log the (re-)entry
+		DungeonTrackerUpdateEntryCount()
 
 		C_Timer.After( 45, function()
 			DungeonTrackerCheckVersions()
