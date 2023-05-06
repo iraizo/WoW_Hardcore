@@ -119,6 +119,12 @@ end
 local function decodeMessage(msg)
   local values = {}
   for w in msg:gmatch("(.-)~") do table.insert(values, w) end
+  if #values < 9 then
+	-- Return something that causes the calling function to return on the isValidEntry check
+	--print("Malformed deathlog message with " .. #values .. " data values")
+	local malformed_player_data = PlayerData( "MalformedData", nil, nil, nil,nil,nil,nil,nil,nil,nil,nil )
+	return malformed_player_data
+  end
   local date = nil
   local last_words = nil
   local name = values[1]
