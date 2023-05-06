@@ -16,6 +16,7 @@
 	"date",
 	"CreateFrame",
 	"UnitGUID",
-	"max"
+	"max",
+	"SecondsToTime"
 ]
 }

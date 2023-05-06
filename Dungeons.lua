@@ -638,6 +638,37 @@ local function DungeonTrackerLogRun(run)
 	DungeonTrackerUpdateInfractions()
 end
 
+-- DungeonTrackerUpdateEntryCount()
+--
+-- Keeps count of how often each dungeon has been entered
+-- Note that this is done immediately for all dungeons except for Scarlet Monastery wings,
+-- where we need to wait until the wing is identified
+
+local function DungeonTrackerUpdateEntryCount()
+
+	local name = Hardcore_Character.dt.current.name
+	if name == nil then
+		return
+	end
+
+	-- Suppress counting if we don't know the wing yet
+	if name == "Scarlet Monastery" then
+		return
+	end
+
+	-- Create the table if we don't have it already
+	if Hardcore_Character.dt.num_entries == nil then
+		Hardcore_Character.dt.num_entries = {}
+	end
+
+	-- Update or create the entry for this dungeon
+	if Hardcore_Character.dt.num_entries[ name ] == nil then
+		Hardcore_Character.dt.num_entries[ name ] = 0
+	end
+	Hardcore_Character.dt.num_entries[ name ] = Hardcore_Character.dt.num_entries[ name ] + 1
+
+end
+
 -- DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 --
 -- Finds the SM wing in which a certain mob_type_id is found. Only works for unique mob_ids,
@@ -645,11 +676,11 @@ end
 
 local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 
-	local SM = "Scarlet Monastery" 
+	local SM = "Scarlet Monastery"
 
 	-- If this is SM (=189), and we don't know the wing yet, we try to find it
 	if map_id == 189 and Hardcore_Character.dt.current.name == SM then
-	
+
 		local wing_spawns = {
 			{4293, "Scarlet Scryer", "GY"},
 			{4306, "Scarlet Torturer", "GY"},
@@ -676,17 +707,18 @@ local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 			{3977, "High Inquisitor Whitemane", "Cath"},
 			{4542, "High Inquisitor Fairbanks", "Cath"},
 		}
-		
+
 		-- See if any of the listed mobs is recognised
 		for i, v in ipairs( wing_spawns ) do
 			if mob_type_id == v[1] then
 				Hardcore_Character.dt.current.name = SM .. " (" .. v[3] .. ")"
+				DungeonTrackerUpdateEntryCount()
 				Hardcore:Debug( "Identified SM wing " .. v[3] .. " from " .. v[2] )
 				return
 			end
 		end
 	end
-	
+
 	-- If not SM, or wing already known, or wing not found, we do nothing
 
 end
@@ -1698,7 +1730,7 @@ local function DungeonTracker()
 				and Hardcore_Character.dt.current.iid ~= nil
 				and Hardcore_Character.dt.pending[i].iid == Hardcore_Character.dt.current.iid 
 			then
-				-- Add the inside time of the current run (should be defined since the iid has been found
+				-- Add the inside time of the current run (should be defined since the iid has been found)
 				Hardcore_Character.dt.pending[i].time_inside = Hardcore_Character.dt.pending[i].time_inside + Hardcore_Character.dt.current.time_inside
 				Hardcore_Character.dt.current = Hardcore_Character.dt.pending[i]
 				table.remove(Hardcore_Character.dt.pending, i)
@@ -1748,9 +1780,12 @@ local function DungeonTracker()
 		if DungeonTrackerDatabaseHasBossInfo( name ) then
 			DUNGEON_RUN.bosses = {}
 		end
-		
+
 		Hardcore_Character.dt.current = DUNGEON_RUN
 		Hardcore:Debug("Starting new run in " .. Hardcore_Character.dt.current.name)
+
+		-- Log the (re-)entry
+		DungeonTrackerUpdateEntryCount()
 
 		C_Timer.After( 45, function()
 			DungeonTrackerCheckVersions()
