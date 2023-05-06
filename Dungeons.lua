@@ -641,8 +641,7 @@ end
 -- DungeonTrackerUpdateEntryCount()
 --
 -- Keeps count of how often each dungeon has been entered
--- Note that this is done immediately for all dungeons except for Scarlet Monastery wings,
--- where we need to wait until the wing is identified
+-- (= 1 + number of reconnects)
 
 local function DungeonTrackerUpdateEntryCount()
 
@@ -651,27 +650,16 @@ local function DungeonTrackerUpdateEntryCount()
 		return
 	end
 
-	-- Suppress counting if we don't know the wing yet
-	if name == "Scarlet Monastery" then
-		return
-	end
-
-	-- Create the table if we don't have it already
-	if Hardcore_Character.dt.num_entries == nil then
-		Hardcore_Character.dt.num_entries = {}
+	-- Create the count if we don't have it already
+	if Hardcore_Character.dt.current.num_entries == nil then
+		Hardcore_Character.dt.current.num_entries = 0
+		Hardcore:Debug( "Set num_entries to 0!! " )
 	end
 
 	-- Update or create the entry for this dungeon
-	if Hardcore_Character.dt.num_entries[ name ] == nil then
-		Hardcore_Character.dt.num_entries[ name ] = 0
-		-- Update the count to include also the completed runs (done in older addon versions)
-		for _, v in ipairs( Hardcore_Character.dt.runs) do
-			if v.name == name then
-				Hardcore_Character.dt.num_entries[ name ] = Hardcore_Character.dt.num_entries[ name ] + 1
-			end
-		end
-	end
-	Hardcore_Character.dt.num_entries[ name ] = Hardcore_Character.dt.num_entries[ name ] + 1
+	Hardcore_Character.dt.current.num_entries = Hardcore_Character.dt.current.num_entries + 1
+
+	Hardcore:Debug( "Set num_entries to " .. Hardcore_Character.dt.current.num_entries )
 
 end
 
@@ -718,7 +706,6 @@ local function DungeonTrackerIdentifyScarletMonasteryWing( map_id, mob_type_id )
 		for i, v in ipairs( wing_spawns ) do
 			if mob_type_id == v[1] then
 				Hardcore_Character.dt.current.name = SM .. " (" .. v[3] .. ")"
-				DungeonTrackerUpdateEntryCount()
 				Hardcore:Debug( "Identified SM wing " .. v[3] .. " from " .. v[2] )
 				return
 			end
@@ -1740,6 +1727,7 @@ local function DungeonTracker()
 				Hardcore_Character.dt.pending[i].time_inside = Hardcore_Character.dt.pending[i].time_inside + Hardcore_Character.dt.current.time_inside
 				Hardcore_Character.dt.current = Hardcore_Character.dt.pending[i]
 				table.remove(Hardcore_Character.dt.pending, i)
+				DungeonTrackerUpdateEntryCount()
 				Hardcore:Debug("Reconnected to pending run in " .. Hardcore_Character.dt.current.name)
 				break
 			elseif Hardcore_Character.dt.pending[i].iid ~= nil 			-- Should never happen, but yeah...

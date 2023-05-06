@@ -1071,7 +1071,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	local date_data
 	local boss_data
 
-	local function UpdateDungeonsData(_dt_runs, _dt_pending, _dt_current, _dt_num_entries)
+	local function UpdateDungeonsData(_dt_runs, _dt_pending, _dt_current)
 		-- Initialise data
 		local name_str = ""
 		local id_str = ""
@@ -1112,11 +1112,9 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			return "?"
 		end
 
-		local function GetEntryCountString(run, entries)
-			if run.name ~= nil and entries ~= nil then
-				if entries[ run.name ] ~= nil and entries[ run.name ] > 1 then
-					return " [" .. entries[ run.name ] .. "]"
-				end
+		local function GetEntryCountString(run)
+			if run.num_entries ~= nil and run.num_entries > 1 then
+					return " [" .. run.num_entries .. "]"
 			end
 			return ""
 		end
@@ -1126,7 +1124,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 		-- Go through the complete, idle and active runs
 		local num_lines = 0
 		for i, v in pairs(_dt_runs) do
-			name_str = name_str .. v.name .. GetEntryCountString(v, _dt_num_entries) .. "\n"
+			name_str = name_str .. v.name .. GetEntryCountString(v) .. "\n"
 			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			if v.level > 0 then
 				level_str = level_str .. v.level .. "\n"
@@ -1143,7 +1141,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			num_lines = num_lines + 1
 		end
 		for i, v in pairs(_dt_pending) do
-			name_str = name_str .. "|c00FFFF00" .. v.name .. GetEntryCountString(v, _dt_num_entries) .. " (" .. SecondsToTime(v.idle) .. ")\n"
+			name_str = name_str .. "|c00FFFF00" .. v.name .. GetEntryCountString(v) .. " (" .. SecondsToTime(v.idle) .. ")\n"
 			id_str = id_str .. GetInstanceIDString(v) .. "\n"
 			level_str = level_str .. v.level .. "\n"
 			played_str = played_str .. SecondsToTime(v.time_inside) .. "\n"
@@ -1152,7 +1150,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 			num_lines = num_lines + 1
 		end
 		if next(_dt_current) then
-			name_str = name_str .. "|c0000FF00" .. _dt_current.name .. GetEntryCountString(_dt_current, _dt_num_entries) .. " (active)\n"
+			name_str = name_str .. "|c0000FF00" .. _dt_current.name .. GetEntryCountString(_dt_current) .. " (active)\n"
 			id_str = id_str .. GetInstanceIDString(_dt_current) .. "\n"
 			level_str = level_str .. _dt_current.level .. "\n"
 			played_str = played_str .. SecondsToTime(_dt_current.time_inside) .. "\n"
@@ -1306,7 +1304,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 	data_rows:AddChild(boss_data)
 
 	-- Fill in the data into the data fields
-	UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current,_hardcore_character.dt.num_entries)
+	UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current)
 
 	-- Some weird stuff needed to prevent the scrollframe from malfunctioning
 	local entry = AceGUI:Create("SimpleGroup")
@@ -1332,7 +1330,7 @@ local function DrawDungeonsTab(container, _hardcore_character)
 
 	-- Start the ticker that updates the data in the dungeons tab (it gets cancelled in SelectGroup() when you change tabs)
 	hardcore_modern_menu_state.ticker_handler = C_Timer.NewTicker(1, function()
-		UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current,_hardcore_character.dt.num_entries)
+		UpdateDungeonsData(_hardcore_character.dt.runs, _hardcore_character.dt.pending, _hardcore_character.dt.current)
 	end)
 end
 
