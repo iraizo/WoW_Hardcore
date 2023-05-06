@@ -353,7 +353,7 @@ local function SlashHandler(msg, editbox)
 		Hardcore_Frame:Hide()
 
 	elseif cmd == "debug" then
-		debug = not debug
+		local debug = Hardcore:ToggleDebug()
 		Hardcore:Print("Debugging set to " .. tostring(debug))
 		-- expand the mobs to allow for anti-grief testing in elwynn
 		GRIEFING_MOBS = {
