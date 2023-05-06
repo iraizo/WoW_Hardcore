@@ -254,6 +254,12 @@ local GRIEFING_MOBS = {
 	["Hakkari Oracle"] = 1,
 	["Searing Ghoul"] = 1,
 	["Dessecus"] = 1,
+	["Emeraldon Tree Warder"] = 1,
+	["Black Dragonspawn"] = 1,
+	["Clunk"] = 1, 
+	["Emeraldon Oracle"] = 1,
+	["Gurubashi Warrior"] = 1,
+
 }
 local KNOWN_GRIEFERS = {
 	["Spinnaz"] = 1,
@@ -272,6 +278,27 @@ local KNOWN_GRIEFERS = {
 	["Notveryhc"] = 1,
 	["Whyyouhitcat"] = 1,
 	["Milfmuncher"] = 1,
+	["Backtoelwynn"] = 1,
+	["Kargoyz"] = 1,
+	["Bigpulla"] = 1,
+	["Kargoys"] = 1,
+	["Smyllyxd"] = 1,
+	["Kuckfargoz"] = 1,
+	["Yurd"] = 1,
+	["Eufriendx"] = 1,
+	["Backtolumby"] = 1,
+	["Nowudead"] = 1,
+	["Necrogrifter"] = 1,
+	["Voldemort"] = 1,
+	["Foku"] = 1,
+	["Rogercheeto"] = 1,
+	["Coomerino"] = 1,
+	["Kargoztv"] = 1,
+	["Skullker"] = 1,
+	["Lipstiklezbo"] = 1,
+	["Sweatyloser"] = 1,
+	["Elco"] = 1,
+
 }
 
 -- frame display
