@@ -653,13 +653,10 @@ local function DungeonTrackerUpdateEntryCount()
 	-- Create the count if we don't have it already
 	if Hardcore_Character.dt.current.num_entries == nil then
 		Hardcore_Character.dt.current.num_entries = 0
-		Hardcore:Debug( "Set num_entries to 0!! " )
 	end
 
 	-- Update or create the entry for this dungeon
 	Hardcore_Character.dt.current.num_entries = Hardcore_Character.dt.current.num_entries + 1
-
-	Hardcore:Debug( "Set num_entries to " .. Hardcore_Character.dt.current.num_entries )
 
 end
 
