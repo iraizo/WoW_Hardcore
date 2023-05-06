@@ -664,6 +664,12 @@ local function DungeonTrackerUpdateEntryCount()
 	-- Update or create the entry for this dungeon
 	if Hardcore_Character.dt.num_entries[ name ] == nil then
 		Hardcore_Character.dt.num_entries[ name ] = 0
+		-- Update the count to include also the completed runs (done in older addon versions)
+		for _, v in ipairs( Hardcore_Character.dt.runs) do
+			if v.name == name then
+				Hardcore_Character.dt.num_entries[ name ] = Hardcore_Character.dt.num_entries[ name ] + 1
+			end
+		end
 	end
 	Hardcore_Character.dt.num_entries[ name ] = Hardcore_Character.dt.num_entries[ name ] + 1
 
