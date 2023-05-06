@@ -3111,6 +3111,10 @@ function Hardcore:GetCleanVerificationStatus()
 	return my_verif_status
 end
 
+function Hardcore:ToggleDebug( )
+	debug = not debug
+	return debug
+end
 
 local ATTRIBUTE_SEPARATOR = "_"
 function Hardcore:GenerateVerificationString()
