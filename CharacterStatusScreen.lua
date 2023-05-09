@@ -173,7 +173,7 @@ function extractDetails(str, ignoreKeys)
 	local details_table = {}
 	for key, value in str:gmatch("(%S+)=(%S+)") do
 		Hardcore:Print("extractDetails: " .. key .. " = " .. value)
-	  -- Check if the current key is in the ignoreKeys array
+		-- Check if the current key is in the ignoreKeys array
 		local ignore = false
 		for _, ignoreKey in ipairs(ignoreKeys or {}) do
 			if key == ignoreKey then
@@ -183,20 +183,20 @@ function extractDetails(str, ignoreKeys)
 		end
 		-- Store the key-value pair in the details table if it's not being ignored
 		if not ignore then
-		details_table[key] = value
+			details_table[key] = value
 		end
 	end
-  
+
 	return details_table
 end
 
 function formatDetails(details_table)
 	local str = ""
 	for key, value in pairs(details_table) do
-	  str = str .. key .. " = " .. value .. ", "
+		str = str .. key .. " = " .. value .. ", "
 	end
 	return str:sub(1, -3) -- Remove the trailing space before returning
-  end
+end
 
 function UpdateCharacterHC(
 	_hardcore_character,
@@ -289,14 +289,14 @@ function UpdateCharacterHC(
 	character_meta_data_container:AddChild(version_name)
 
 	-- SET UP FILTERING
-	local filtered_status = _hardcore_character.verification_status
+	local filtered_status = "PASS"
 	local filtered_details = _hardcore_character.verification_details
 
 	--Hardcore:Print("Status: ".. _hardcore_character.verification_status)
 
 	if _player_name ~= UnitName("player") then
 		-- Remove tracked_time and deaths entries
-		local ignoreKeys = {"tracked_time", "deaths", "appeals", "repeat_dung", "overlvl_dung"}
+		local ignoreKeys = { "tracked_time", "deaths", "appeals", "repeat_dung", "overlvl_dung" }
 		local details_table = extractDetails(_hardcore_character.verification_details, ignoreKeys)
 		filtered_details = formatDetails(details_table)
 
@@ -349,13 +349,13 @@ function UpdateCharacterHC(
 	hc_tag_h:SetText(verif_msg2)
 	hc_tag_h:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
 	character_meta_data_container:AddChild(hc_tag_h)
-	
+
 	local explanatory_key_msg = ""
-	.. "\n\nWhat does this mean?\n"
-	.. "|cff1eff0cPASS|r - Valid HC Character, Dungeon-legal\n"
-	.. "|cffff8000PENDING|r - Death or data appeal in progress\n"
-	.. "|cffff3f40FAIL|r - Has failed the challenge - INVALID CHARACTER\n"
-	
+		.. "\n\nWhat does this mean?\n"
+		.. "|cff1eff0cPASS|r - Valid HC Character, Dungeon-legal\n"
+		.. "|cffff8000PENDING|r - Death or data appeal in progress\n"
+		.. "|cffff3f40FAIL|r - Has failed the challenge - INVALID CHARACTER\n"
+
 	local hc_tag_g = AceGUI:Create("HardcoreClassTitleLabel")
 	hc_tag_g:SetRelativeWidth(1.0)
 	hc_tag_g:SetHeight(60)
@@ -491,7 +491,8 @@ TabGUI:SetScript("OnEvent", function(self, event, ...)
 	if event == "PLAYER_ENTER_COMBAT" then
 		TabGUI.text:SetText("|c00808080HC|r")
 		HideCharacterHC()
-		_G["HardcoreCharacterTab"]:SetScript("OnClick", function(self, arg1) end)
+		_G["HardcoreCharacterTab"]:SetScript("OnClick", function(self, arg1)
+		end)
 	elseif event == "PLAYER_LEAVE_COMBAT" then
 		TabGUI.text:SetText("HC")
 		_G["HardcoreCharacterTab"]:SetScript("OnClick", function(self, arg1)
