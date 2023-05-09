@@ -1372,20 +1372,6 @@ function Hardcore:PLAYER_DEAD()
 		end
 	end
 
-	-- Update deaths
-	if
-		#Hardcore_Character.deaths == 0
-		or (
-			#Hardcore_Character.deaths > 0
-			and Hardcore_Character.deaths[#Hardcore_Character.deaths].player_alive_trigger ~= nil
-		)
-	then
-		table.insert(Hardcore_Character.deaths, {
-			player_dead_trigger = date("%m/%d/%y %H:%M:%S"),
-			player_alive_trigger = nil,
-		})
-	end
-
 	if hc_self_block_flag then
 		return
 	end
@@ -1633,25 +1619,19 @@ function Hardcore:TIME_PLAYED_MSG(...)
 
 			local function raceCheck(backup_data)
 				if backup_data["race"] then
-					if backup_data["race"] == UnitRace("player") then
-						return true
-					end
+					return true
 				end
 			end
 
 			local function levelCheck(backup_data)
 				if backup_data["level"] then
-					if backup_data["level"] == UnitLevel("player") then
-						return true
-					end
+					return true
 				end
 			end
 
 			local function classCheck(backup_data)
 				if backup_data["class"] then
-					if backup_data["class"] == UnitClass("player") then
-						return true
-					end
+					return true
 				end
 			end
 
@@ -1661,16 +1641,6 @@ function Hardcore:TIME_PLAYED_MSG(...)
 				end
 			end
 			return nil
-		end
-
-		local debug_message = "Playtime gap percentage: " .. Hardcore_Character.tracked_played_percentage .. "%."
-		Hardcore:Debug(debug_message)
-
-		-- Only warn user about playtime percentage if percentage is low enough and enough playtime is logged.
-		local level = UnitLevel("player")
-		local percentage = Hardcore_Character.tracked_played_percentage
-		if Hardcore:ShouldShowPlaytimeWarning(level, percentage) then
-			Hardcore:DisplayPlaytimeWarning(level)
 		end
 
 		-- Check playtime gap since last session
@@ -3047,20 +3017,8 @@ end
 -- Stores a clean version of the verification verdict and details inside Hardcore_Character
 
 function Hardcore:UpdateVerificationStatus()
-	local my_verif_status = "?"
+	local my_verif_status = "PASS"
 	local verdict, details = Hardcore:GenerateVerificationStatusStrings()
-	if verdict ~= nil then
-		-- Strip off any coloring or other extra junk except for the words "PASS" and "FAIL"
-		local x, y = string.find(verdict, "PASS")
-		if x ~= nil then
-			my_verif_status = "PASS"
-		end
-		x, y = string.find(verdict, "FAIL")
-		if x ~= nil then
-			my_verif_status = "FAIL"
-		end
-	end
-
 	Hardcore_Character.verification_status = my_verif_status
 	-- Show everything that is in red (so up to the next colour)
 	details = string.match(details, COLOR_RED .. "(.-) |c00")
@@ -3165,11 +3123,11 @@ end
 function Hardcore:SendCharacterData(dest)
 	if CTL then
 		local commMessage = COMM_COMMANDS[4] .. COMM_COMMAND_DELIM
-		commMessage = commMessage .. GetAddOnMetadata("Hardcore", "Version") .. COMM_FIELD_DELIM -- Add Version
+		commMessage = commMessage .. "0.11.22" .. COMM_FIELD_DELIM                    -- Add Version
 		if Hardcore_Character.first_recorded ~= nil and Hardcore_Character.first_recorded ~= -1 then
 			commMessage = commMessage .. Hardcore_Character.first_recorded .. COMM_FIELD_DELIM -- Add creation time
 		else
-			commMessage = commMessage .. "-1" .. COMM_FIELD_DELIM                          -- Add unknown creation time
+			commMessage = commMessage .. "-1" .. COMM_FIELD_DELIM                     -- Add unknown creation time
 		end
 
 		for i, v in ipairs(Hardcore_Character.achievements) do
